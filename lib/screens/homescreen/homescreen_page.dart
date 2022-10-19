@@ -34,6 +34,7 @@ class _HomeScreenPageState extends ConsumerState<HomeScreenPage> {
         child: BottomNavigationBar(
           elevation: 0.0,
           showUnselectedLabels: false,
+          selectedFontSize: 12,
           selectedLabelStyle: const TextStyle(
             color: blueColor,
             fontWeight: FontWeight.w500,
@@ -42,7 +43,7 @@ class _HomeScreenPageState extends ConsumerState<HomeScreenPage> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(
-                FontAwesomeIcons.house,
+                FontAwesomeIcons.diceFour,
                 color: blueColor,
               ),
               label: 'Home',
