@@ -1,7 +1,7 @@
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
-import 'package:decisionroll/screens/homescreen/homepage.dart';
+import 'package:decisionroll/screens/homescreen/homescreen_page.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:decisionroll/utilities/images.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 InkWell(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MyHomePage())),
+                      builder: (context) => const HomeScreenPage())),
                   child: SizedBox(
                       width: SizeConfig.screenWidth,
                       child: OptionView(

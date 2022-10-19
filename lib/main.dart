@@ -4,6 +4,7 @@ import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/screens/authentication/login_page.dart';
 import 'package:decisionroll/screens/homescreen/homescreen_page.dart';
+import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'DecisionRoll',
       theme: ThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          selectedItemColor: blueColor,
+        ),
         inputDecorationTheme: InputDecorationTheme(
           iconColor: Colors.black,
           enabledBorder: OutlineInputBorder(
@@ -46,6 +50,7 @@ class MyApp extends StatelessWidget {
           contentPadding: const EdgeInsets.all(18),
         ),
         textTheme: GoogleFonts.poppinsTextTheme(),
+        fontFamily: GoogleFonts.poppins().fontFamily,
       ),
       home: const AuthenticationWrapper(),
     );
