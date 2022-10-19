@@ -65,174 +65,181 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ),
               SizedBox(
                 height: SizeConfig.screenHeight! * 0.7,
-                child: decisions.when(
-                  data: (data) {
-                    List decodedList = [];
-                    var modeledJson = json.decode(data.toString());
-                    decodedList.addAll(modeledJson);
+                child: ListView(
+                  children: [
+                    decisions.when(
+                      data: (data) {
+                        List decodedList = [];
+                        var modeledJson = json.decode(data.toString());
+                        decodedList.addAll(modeledJson);
 
-                    return Table(
-                      border: const TableBorder(
-                          horizontalInside: BorderSide(
-                              color: whiteBackgroundColor, width: 10.0)),
-                      children: [
-                        //This table row is for the table header which is static
-                        const TableRow(children: [
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 3),
-                              child: Text(
-                                "Decision",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 3),
-                              child: Text(
-                                "Created At",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 3),
-                              child: Text(
-                                "State",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 3),
-                              child: Text(
-                                "Created By",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 3),
-                              child: Text(
-                                "Vote",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                              ),
-                            ),
-                          ),
-                        ]),
-                        // Using the spread operator to add the remaining table rows which have dynamic data
-                        // Be sure to use .asMap().entries.map if you want to access their indexes and objectName.map() if you have no interest in the items index.
-
-                        ...decodedList.asMap().entries.map(
-                          (decision) {
-                            String formatDate() {
-                              String formattedDate = decision.value['createdAt']
-                                  .toString()
-                                  .substring(7);
-                              return formattedDate;
-                            }
-
-                            return TableRow(
-                                decoration: const BoxDecoration(
-                                  color: whiteBackgroundColor,
+                        return Table(
+                          border: const TableBorder(
+                              horizontalInside: BorderSide(
+                                  color: whiteBackgroundColor, width: 10.0)),
+                          children: [
+                            //This table row is for the table header which is static
+                            const TableRow(children: [
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 3),
+                                  child: Text(
+                                    "Decision",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
+                                  ),
                                 ),
-                                children: [
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 7),
-                                      child: Text(
-                                        decision.value['title'],
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87),
-                                      ),
-                                    ),
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 3),
+                                  child: Text(
+                                    "Created At",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
                                   ),
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 7),
-                                      child: Text(
-                                        formatDate(),
-                                        style: const TextStyle(
-                                            fontSize: 10, color: Colors.black),
-                                      ),
-                                    ),
+                                ),
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 3),
+                                  child: Text(
+                                    "State",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
                                   ),
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 3),
-                                      child: Text(
-                                        decision.value['state'].toString(),
-                                        style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            color: greyColor),
-                                      ),
-                                    ),
+                                ),
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 3),
+                                  child: Text(
+                                    "Created By",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
                                   ),
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 7),
-                                      child: Text(
-                                        decision.value['username'],
-                                        style: const TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w500,
-                                            color: blueColor),
-                                      ),
-                                    ),
+                                ),
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 3),
+                                  child: Text(
+                                    "Vote",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
                                   ),
-                                  const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 3),
-                                      child: Text(
-                                        "Vote",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: greenColor,
+                                ),
+                              ),
+                            ]),
+                            // Using the spread operator to add the remaining table rows which have dynamic data
+                            // Be sure to use .asMap().entries.map if you want to access their indexes and objectName.map() if you have no interest in the items index.
+
+                            ...decodedList.asMap().entries.map(
+                              (decision) {
+                                String formatDate() {
+                                  String formattedDate = decision
+                                      .value['createdAt']
+                                      .toString()
+                                      .substring(7);
+                                  return formattedDate;
+                                }
+
+                                return TableRow(
+                                    decoration: const BoxDecoration(
+                                      color: whiteBackgroundColor,
+                                    ),
+                                    children: [
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20, horizontal: 7),
+                                          child: Text(
+                                            decision.value['title'],
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black87),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ]);
-                          },
-                        )
-                      ],
-                    );
-                  },
-                  loading: () => const ListDecisionsShimmer(),
-                  error: (_, __) => const Text('Probably server not running,'),
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20, horizontal: 7),
+                                          child: Text(
+                                            formatDate(),
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20, horizontal: 3),
+                                          child: Text(
+                                            decision.value['state'].toString(),
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                                color: greyColor),
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20, horizontal: 7),
+                                          child: Text(
+                                            decision.value['username'],
+                                            style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                                color: blueColor),
+                                          ),
+                                        ),
+                                      ),
+                                      const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 20, horizontal: 3),
+                                          child: Text(
+                                            "Vote",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: greenColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ]);
+                              },
+                            )
+                          ],
+                        );
+                      },
+                      loading: () => const ListDecisionsShimmer(),
+                      error: (_, __) =>
+                          const Text('Probably server not running,'),
+                    ),
+                  ],
                 ),
               ),
             ],
