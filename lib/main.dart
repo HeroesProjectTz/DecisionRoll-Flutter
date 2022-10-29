@@ -18,7 +18,7 @@ void main() {
 late io.Socket socket;
 String savedUserId = "";
 String savedToken = "";
-String savedUsername = "";
+String savedUserEmail = "";
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -68,18 +68,18 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   void startTimer() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     bool? logged = preferences.getBool("logged");
-
+    // preferences.clear();
     Timer(const Duration(milliseconds: 2000), () {
       if (preferences.getBool("logged") != null) {
         logged = preferences.getBool("logged");
 
         var userId = preferences.getString("user_id")!;
         var token = preferences.getString("token")!;
-        var username = preferences.getString("user_name")!;
+        var userEmail = preferences.getString("user_email")!;
         if (logged == true) {
           savedUserId = userId;
           savedToken = token;
-          savedUsername = username;
+          savedUserEmail = userEmail;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomeScreenPage()),

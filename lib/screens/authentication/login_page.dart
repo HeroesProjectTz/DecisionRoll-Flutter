@@ -1,11 +1,13 @@
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
-import 'package:decisionroll/screens/homescreen/homescreen_page.dart';
+import 'package:decisionroll/main.dart';
+import 'package:decisionroll/screens/authentication/email_login_verify_page.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:decisionroll/utilities/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -16,8 +18,23 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    socket.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(isLoading);
     return Scaffold(
         backgroundColor: const Color(0xffF1FAEE),
         body: Padding(
@@ -49,15 +66,44 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: SizeConfig.screenHeight! * 0.03,
                 ),
                 InkWell(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const HomeScreenPage())),
-                  child: SizedBox(
-                      width: SizeConfig.screenWidth,
-                      child: OptionView(
-                        blueColor,
-                        'SignIn',
-                        padding: 15,
-                      )),
+                  onTap: isLoading == true
+                      ? () {}
+                      : () {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          requestEmailLinkLogin() {
+                            socket = io.io(
+                                'http://192.168.125.187:5002/loginlink',
+                                io.OptionBuilder()
+                                    .setTransports(['websocket']).build());
+                            socket.onConnect((data) {
+                              debugPrint(data);
+                              socket.emit(
+                                  'loginlink', {'email': emailController.text});
+                            });
+                            socket.on("loginlink", (response) {
+                              socket.dispose();
+
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SignUpVerifyPage(
+                                        email: emailController.text,
+                                      )));
+                            });
+                          }
+
+                          requestEmailLinkLogin();
+                        },
+                  child: isLoading == true
+                      ? const Center(child: CircularProgressIndicator())
+                      : SizedBox(
+                          width: SizeConfig.screenWidth,
+                          child: OptionView(
+                            blueColor,
+                            'SignIn',
+                            padding: 15,
+                          )),
                 ),
                 SizedBox(
                   height: SizeConfig.screenHeight! * 0.3,
