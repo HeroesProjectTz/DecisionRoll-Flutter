@@ -68,7 +68,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   void startTimer() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     bool? logged = preferences.getBool("logged");
-    preferences.clear();
+    // preferences.clear();
     Timer(const Duration(milliseconds: 2000), () {
       if (preferences.getBool("logged") != null) {
         logged = preferences.getBool("logged");
