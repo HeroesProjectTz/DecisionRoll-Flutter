@@ -12,7 +12,7 @@ final emailLoginVerificationProvider = StreamProvider<String>((ref) async* {
     // close socketio
     socketResponse.close();
   });
-  socket = io.io('http://192.168.125.187:5002/verify-login-email',
+  socket = io.io('https://decisionrollbackend.herokuapp.com/verify-login-email',
       io.OptionBuilder().setTransports(['websocket']).build());
   socket.onConnect((data) {});
   socket.on("loginlinkverification", (response) {

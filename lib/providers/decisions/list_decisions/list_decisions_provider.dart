@@ -11,7 +11,7 @@ final fetchDecisionsProvider = StreamProvider<String>((ref) async* {
     // close socketio
     socketResponse.close();
   });
-  socket = io.io('http://192.168.125.187:5002/decisions',
+  socket = io.io('https://decisionrollbackend.herokuapp.com/decisions',
       io.OptionBuilder().setTransports(['websocket']).build());
   socket.onConnect((data) {
     socket.emit('decisions', {'decisions': 'Requesting Decisions'});
