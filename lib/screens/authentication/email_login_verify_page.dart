@@ -88,9 +88,7 @@ class _SignUpVerifyPageState extends ConsumerState<SignUpVerifyPage> {
                               builder: (context) => const HomeScreenPage()));
                         });
                       }
-                      return SizedBox(
-                        child: Text(data.toString()),
-                      );
+                      return const SizedBox();
                     }),
                 const BubbleLoadingWidget(),
               ],
