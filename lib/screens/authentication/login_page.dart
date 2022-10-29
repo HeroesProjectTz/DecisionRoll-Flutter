@@ -34,6 +34,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(isLoading);
     return Scaffold(
         backgroundColor: const Color(0xffF1FAEE),
         body: Padding(
@@ -69,13 +70,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ? () {}
                       : () {
                           setState(() {
-                            isLoading == true;
+                            isLoading = true;
                           });
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => const HomeScreenPage(
-                          //         // email: emailController.text,
-                          //         )));
-                          debugPrint("we here");
 
                           requestEmailLinkLogin() {
                             socket = io.io(
@@ -88,7 +84,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   'loginlink', {'email': emailController.text});
                             });
                             socket.on("loginlink", (response) {
-                              debugPrint("Response is ${response.toString()}");
+                              socket.dispose();
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => SignUpVerifyPage(
                                         email: emailController.text,

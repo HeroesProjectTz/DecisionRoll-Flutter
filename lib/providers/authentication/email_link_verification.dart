@@ -14,19 +14,14 @@ final emailLoginVerificationProvider = StreamProvider<String>((ref) async* {
   });
   socket = io.io('http://192.168.125.187:5002/verify-login-email',
       io.OptionBuilder().setTransports(['websocket']).build());
-  socket.onConnect((data) {
-    // socket.emit('decisions', {'email': 'he'});
-  });
+  socket.onConnect((data) {});
   socket.on("loginlinkverification", (response) {
-    final validMap = json.decode(json.encode(response)) as Map<String, dynamic>;
+    var responseMap = json.encode(response);
 
-    // print(validMap);
-
-    socketResponse.add(validMap.toString());
+    socketResponse.add(responseMap);
   });
 
   await for (final value in socketResponse.stream) {
-    print(value);
     yield value;
   }
 });

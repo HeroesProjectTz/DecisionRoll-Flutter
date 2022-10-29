@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/providers/authentication/email_link_verification.dart';
 import 'package:decisionroll/screens/homescreen/homescreen_page.dart';
@@ -64,23 +66,27 @@ class _SignUpVerifyPageState extends ConsumerState<SignUpVerifyPage> {
                 response.maybeWhen(
                     orElse: () => const SizedBox(),
                     data: (data) {
-                      // var modeledJson = json.decode(data.toString());
-                      debugPrint(data);
+                      print("DATA IS: $data");
+                      var modeledJson = json.decode(response.value.toString());
                       // Save User Access Token To Device
                       saveUserDetails() async {
                         SharedPreferences sharedPreferences =
                             await SharedPreferences.getInstance();
                         sharedPreferences.setBool('logged', true);
-                        sharedPreferences.setString('user_id', data['user_id']);
                         sharedPreferences.setString(
-                            'user_email', data['user_email']);
-                        sharedPreferences.setString('token', data['token']);
+                            'user_id', modeledJson['user_id']);
+                        sharedPreferences.setString(
+                            'user_email', modeledJson['user_email']);
+                        sharedPreferences.setString(
+                            'token', modeledJson['token']);
                       }
 
-                      saveUserDetails();
-                      if (data['status'] == 'success') {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const HomeScreenPage()));
+                      if (modeledJson['status'] == 'success') {
+                        saveUserDetails();
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const HomeScreenPage()));
+                        });
                       }
                       return SizedBox(
                         child: Text(data.toString()),
