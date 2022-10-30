@@ -49,6 +49,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             child: SfCircularChart(series: <CircularSeries>[
           // Renders doughnut chart
           DoughnutSeries<ChartData, String>(
+              animationDuration: 4500,
+              animationDelay: 2000,
               dataSource: chartData,
               dataLabelSettings: const DataLabelSettings(
                   isVisible: true, textStyle: TextStyle(fontSize: 12)),
