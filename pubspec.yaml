@@ -47,6 +47,7 @@ dependencies:
   freezed: ^2.1.1
   freezed_annotation: ^2.1.0
   intl: ^0.17.0
+  syncfusion_flutter_charts: ^20.3.52
 
 dev_dependencies:
   flutter_test:
