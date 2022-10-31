@@ -85,7 +85,9 @@ class _SignUpVerifyPageState extends ConsumerState<SignUpVerifyPage> {
                         saveUserDetails();
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const HomeScreenPage()));
+                              builder: (context) => const HomeScreenPage(
+                                    child: SizedBox(),
+                                  )));
                         });
                       }
                       return const SizedBox();
