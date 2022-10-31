@@ -14,7 +14,7 @@ class HomeScreenPage extends ConsumerStatefulWidget {
 class _HomeScreenPageState extends ConsumerState<HomeScreenPage> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    const MyHomePage(),
+    const HomePage(),
     const Center(child: Text('Your Decisions')),
     const Center(child: Text('Profile')),
   ];

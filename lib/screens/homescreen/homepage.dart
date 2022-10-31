@@ -5,16 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class MyHomePage extends ConsumerStatefulWidget {
-  const MyHomePage({
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({
     Key? key,
   }) : super(key: key);
 
   @override
-  ConsumerState<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends ConsumerState<MyHomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     // ref.read(fetchDecisionsProvider);

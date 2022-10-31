@@ -7,6 +7,7 @@ import 'package:decisionroll/screens/homescreen/homescreen_page.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -20,12 +21,36 @@ String savedUserId = "";
 String savedToken = "";
 String savedUserEmail = "";
 
+final GoRouter goRouter = GoRouter(
+  debugLogDiagnostics: true,
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const AuthenticationWrapper(),
+      routes: [
+        GoRoute(
+          path: 'auth',
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: 'home',
+          builder: (context, state) => const HomeScreenPage(),
+        ),
+      ],
+    ),
+  ],
+);
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routeInformationProvider: goRouter.routeInformationProvider,
+      routeInformationParser: goRouter.routeInformationParser,
+      routerDelegate: goRouter.routerDelegate,
       debugShowCheckedModeBanner: false,
       title: 'DecisionRoll',
       theme: ThemeData(
@@ -52,7 +77,6 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
         fontFamily: GoogleFonts.poppins().fontFamily,
       ),
-      home: const AuthenticationWrapper(),
     );
   }
 }
@@ -80,21 +104,12 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
           savedUserId = userId;
           savedToken = token;
           savedUserEmail = userEmail;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreenPage()),
-          );
+          context.go('/home');
         } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-          );
+          context.go('/auth');
         }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        context.go('/auth');
       }
     });
   }
