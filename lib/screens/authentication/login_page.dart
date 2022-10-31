@@ -1,7 +1,6 @@
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
-import 'package:decisionroll/main.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:decisionroll/utilities/images.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +20,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
     // TODO: implement initState
+    // socket.connect();
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    socket.dispose();
+    // socket.dispose(/);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(isLoading);
     return Scaffold(
         backgroundColor: const Color(0xffF1FAEE),
         body: Padding(
@@ -72,7 +71,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             isLoading = true;
                           });
 
-                          GoRouter.of(context).go('/home');
+                          GoRouter.of(context).go('/homescreen');
                         },
                   child: isLoading == true
                       ? const Center(child: CircularProgressIndicator())

@@ -40,7 +40,7 @@ dependencies:
   shared_preferences: ^2.0.15
   cached_network_image: ^3.2.1
   shimmer: ^2.0.0
-  flutter_riverpod: 2.0.2
+  flutter_riverpod: 2.1.0
   http: ^0.13.5
   simple_animations: ^5.0.0+2
   lottie: ^1.4.2
