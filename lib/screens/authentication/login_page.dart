@@ -2,12 +2,11 @@ import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
 import 'package:decisionroll/main.dart';
-import 'package:decisionroll/screens/authentication/email_login_verify_page.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:decisionroll/utilities/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -73,27 +72,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             isLoading = true;
                           });
 
-                          requestEmailLinkLogin() {
-                            socket = io.io(
-                                'https://decisionrollbackend.herokuapp.com/loginlink',
-                                io.OptionBuilder()
-                                    .setTransports(['websocket']).build());
-                            socket.onConnect((data) {
-                              debugPrint(data);
-                              socket.emit(
-                                  'loginlink', {'email': emailController.text});
-                            });
-                            socket.on("loginlink", (response) {
-                              socket.dispose();
-
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SignUpVerifyPage(
-                                        email: emailController.text,
-                                      )));
-                            });
-                          }
-
-                          requestEmailLinkLogin();
+                          GoRouter.of(context).go('/home');
                         },
                   child: isLoading == true
                       ? const Center(child: CircularProgressIndicator())
