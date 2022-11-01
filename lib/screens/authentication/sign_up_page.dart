@@ -10,16 +10,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends ConsumerStatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _SignUpPageState extends ConsumerState<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController comfirmPasswordController =
+      TextEditingController();
   bool isLoading = false;
   bool obscureText = true;
   @override
@@ -51,7 +53,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: SizeConfig.screenHeight! * 0.02,
                 ),
                 const Text(
-                  "Welcome Back!",
+                  "Create an account!",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
@@ -84,6 +86,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     texttFieldController: passwordController,
                     hintText: 'password'),
                 SizedBox(
+                  height: SizeConfig.screenHeight! * 0.05,
+                ),
+                TextFieldWidget(
+                    obscureText: obscureText,
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                      child: Icon(
+                        obscureText == true
+                            ? FontAwesomeIcons.eyeSlash
+                            : FontAwesomeIcons.eye,
+                        color: Colors.black,
+                      ),
+                    ),
+                    texttFieldController: comfirmPasswordController,
+                    hintText: 'comfirm password'),
+                SizedBox(
                   height: SizeConfig.screenHeight! * 0.03,
                 ),
                 InkWell(
@@ -110,13 +132,34 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 content: Text('Password is required'),
                               ),
                             );
+                          } else if (comfirmPasswordController.text == '') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.only(
+                                    right: 10, left: 10, bottom: 10),
+                                backgroundColor: blueColor,
+                                content: Text('Comfirm Password is required'),
+                              ),
+                            );
+                          } else if (passwordController.text !=
+                              comfirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.only(
+                                    right: 10, left: 10, bottom: 10),
+                                backgroundColor: blueColor,
+                                content: Text('Password do not match'),
+                              ),
+                            );
                           } else {
                             setState(() {
                               isLoading = true;
                             });
                             ref
                                 .read(authenticationProvider)
-                                .signInWithEmailAndPassword(
+                                .signUpWithEmailAndPassword(
                                     emailController.text,
                                     passwordController.text,
                                     context)
@@ -138,7 +181,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           width: SizeConfig.screenWidth,
                           child: OptionView(
                             blueColor,
-                            'SignIn',
+                            'SignUp',
                             padding: 15,
                           )),
                 ),
@@ -147,18 +190,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 InkWell(
                   onTap: () {
-                    GoRouter.of(context).go('/signup');
+                    GoRouter.of(context).go('/signin');
                   },
                   child: RichText(
                     text: const TextSpan(
-                      text: 'Does\'nt have an account?',
+                      text: 'Already have an account?',
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                            text: ' SignUp',
+                            text: ' SignIn',
                             style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
@@ -168,7 +211,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.15,
+                  height: SizeConfig.screenHeight! * 0.07,
                 ),
                 InkWell(
                   onTap: () {
@@ -214,36 +257,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 SizedBox(
                   height: SizeConfig.screenHeight! * 0.05,
                 ),
-                InkWell(
-                  onTap: () {
-                    ref.read(authenticationProvider).signInWithFacebook().then(
-                        (value) => GoRouter.of(context).go('/authwrapper'));
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xffD9D9D9),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 15,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          facebookIcon,
-                          height: SizeConfig.screenHeight! * 0.03,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.screenWidth! * 0.1,
-                        ),
-                        const Text('SignIn  With Facebook',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ))
-                      ],
-                    ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 15,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        facebookIcon,
+                        height: SizeConfig.screenHeight! * 0.03,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.screenWidth! * 0.1,
+                      ),
+                      const Text('SignIn  With Facebook',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ))
+                    ],
                   ),
                 ),
               ])),

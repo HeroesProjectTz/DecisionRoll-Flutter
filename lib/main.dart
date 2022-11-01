@@ -2,20 +2,35 @@ import 'dart:async';
 
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
+import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/screens/authentication/login_page.dart';
+import 'package:decisionroll/screens/authentication/sign_up_page.dart';
 import 'package:decisionroll/screens/decisions/user_decisions_page.dart';
 import 'package:decisionroll/screens/account/account_page.dart';
 import 'package:decisionroll/screens/homescreen/homepage.dart';
 import 'package:decisionroll/utilities/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyC1Uppt_Z8H7g5QtsUvQnKtOGJgrRTfDMY",
+          appId: "1:678060492134:web:fb123062a8cb06a04b74a7",
+          messagingSenderId: "678060492134",
+          projectId: "decisionroll",
+          authDomain: "decisionroll.firebaseapp.com"),
+    );
+  }
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -28,43 +43,6 @@ bool loggedIn = true;
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-// final GoRouter goRouter =
-//     GoRouter(
-//         navigatorKey: _rootNavigatorKey,
-//       debugLogDiagnostics: true, initialLocation: '/homepage', routes: [
-//   ShellRoute(
-//           navigatorKey: _shellNavigatorKey,
-//     builder: (context, state, child) {
-//       return HomeScreenPage(child: child);
-//     },
-//     routes: <RouteBase>[
-// GoRoute(
-//   path: '/home',
-// builder: (context, state, child) {
-//   return ScaffoldWithBottomNavBar(child: child);
-// },
-// ),
-//       GoRoute(
-//         path: '/',
-//         builder: (context, state) => const AuthenticationWrapper(),
-//         routes: [
-//           GoRoute(
-//             path: 'auth',
-//             builder: (context, state) => const LoginPage(),
-//           ),
-//           GoRoute(
-//             path: 'decisions',
-//             builder: (context, state) => const UserDecisionsPage(),
-//           ),
-//           GoRoute(
-//             path: 'profile',
-//             builder: (context, state) => const AccountPage(),
-//           ),
-//         ],
-//       ),
-//     ],
-//   ),
-// ]);
 final tabs = [
   const ScaffoldWithNavBarTabItem(
     initialLocation: '/homepage',
@@ -98,8 +76,12 @@ final goRouter = GoRouter(
   debugLogDiagnostics: true,
   routes: [
     GoRoute(
-      path: '/auth',
+      path: '/signin',
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: '/signup',
+      builder: (context, state) => const SignUpPage(),
     ),
     GoRoute(
       path: '/authwrapper',
@@ -197,11 +179,11 @@ class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       routeInformationProvider: goRouter.routeInformationProvider,
       routeInformationParser: goRouter.routeInformationParser,
@@ -236,49 +218,28 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AuthenticationWrapper extends StatefulWidget {
-  const AuthenticationWrapper({Key? key}) : super(key: key);
+class AuthenticationWrapper extends ConsumerWidget {
+  const AuthenticationWrapper({super.key});
 
   @override
-  State<AuthenticationWrapper> createState() => _AuthenticationWrapperState();
-}
-
-class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
-  void startTimer() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    bool? logged = preferences.getBool("logged");
-    // preferences.clear();
-    Timer(const Duration(milliseconds: 2000), () {
-      if (preferences.getBool("logged") != null) {
-        logged = preferences.getBool("logged");
-
-        var userId = preferences.getString("user_id")!;
-        var token = preferences.getString("token")!;
-        var userEmail = preferences.getString("user_email")!;
-        if (logged == true) {
-          savedUserId = userId;
-          savedToken = token;
-          savedUserEmail = userEmail;
-          context.go('/homepage');
-        } else {
-          context.go('/auth');
-        }
-      } else {
-        context.go('/auth');
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    startTimer();
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     SizeConfig(context);
-    return const Scaffold(body: BubbleLoadingWidget());
+
+    final authState = ref.watch(authStateProvider);
+    return authState.when(
+        data: (data) {
+          if (data != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go('/homepage');
+            });
+          } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go('/signin');
+            });
+          }
+          return Container(color: Colors.white);
+        },
+        loading: () => const BubbleLoadingWidget(),
+        error: (e, trace) => Text(e.toString()));
   }
 }
