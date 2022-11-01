@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/screens/decisions/user_decisions_page.dart';
-import 'package:decisionroll/screens/decisions/profile_page.dart';
+import 'package:decisionroll/screens/account/account_page.dart';
 import 'package:decisionroll/screens/homescreen/homepage.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 //           ),
 //           GoRoute(
 //             path: 'profile',
-//             builder: (context, state) => const ProfilePage(),
+//             builder: (context, state) => const AccountPage(),
 //           ),
 //         ],
 //       ),
@@ -125,7 +125,7 @@ final goRouter = GoRouter(
             path: '/account',
             builder: (context, state) {
               // final id = state.params['id'];
-              return const ProfilePage(
+              return const AccountPage(
                   // userId: id.toString(),
                   );
             }),
