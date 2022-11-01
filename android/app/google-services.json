@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "678060492134",
+    "project_id": "decisionroll",
+    "storage_bucket": "decisionroll.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678060492134:android:ffaa6ae3947d86744b74a7",
+        "android_client_info": {
+          "package_name": "com.heroesalliance.decisionroll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678060492134-a2g5ai91bjhup9bcvvtddd0nh96qcfae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS_sm27Z14kQKGqBvvnOILwmfbSKfTiXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678060492134-a2g5ai91bjhup9bcvvtddd0nh96qcfae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

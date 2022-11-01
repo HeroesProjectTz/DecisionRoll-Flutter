@@ -34,6 +34,7 @@ class TextFieldWidget extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         suffixIcon: suffixIcon,
+
         fillColor: const Color(0xffD9D9D9),
         filled: true,
         isDense: true,

@@ -1,4 +1,4 @@
-package com.example.decisionroll
+package com.heroesalliance.decisionroll
 
 import io.flutter.embedding.android.FlutterActivity
 
