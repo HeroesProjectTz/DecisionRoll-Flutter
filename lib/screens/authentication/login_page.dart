@@ -17,19 +17,6 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   bool isLoading = false;
-  @override
-  void initState() {
-    // TODO: implement initState
-    // socket.connect();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    // socket.dispose(/);
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

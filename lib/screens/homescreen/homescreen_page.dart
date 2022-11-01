@@ -33,7 +33,7 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
               FontAwesomeIcons.dice,
               color: blueColor,
             ),
-            label: 'Your Decisions',
+            label: 'My Decisions',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -52,10 +52,10 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
     if (location.startsWith('/home')) {
       return 0;
     }
-    if (location.startsWith('/decisions')) {
+    if (location.startsWith('/user')) {
       return 1;
     }
-    if (location.startsWith('/profile')) {
+    if (location.startsWith('/account')) {
       return 2;
     }
     return 0;
@@ -66,9 +66,9 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
       case 0:
         return context.go('/home');
       case 1:
-        return context.go('/decisions');
+        return context.go('/user/1/decisions');
       case 2:
-        return context.go('/profile');
+        return context.go('/account');
       default:
         return context.go('/home');
     }
