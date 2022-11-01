@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-class DecisionPage extends StatelessWidget {
+// ignore: must_be_immutable
+class UserDecisionsPage extends StatelessWidget {
   String userId;
-  DecisionPage({
+  UserDecisionsPage({
     Key? key,
     required this.userId,
   }) : super(key: key);

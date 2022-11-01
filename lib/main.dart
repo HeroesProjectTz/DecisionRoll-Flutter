@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
-import 'package:decisionroll/screens/decisions/decisions_page.dart';
+import 'package:decisionroll/screens/decisions/user_decisions_page.dart';
 import 'package:decisionroll/screens/decisions/profile_page.dart';
 import 'package:decisionroll/screens/homescreen/homepage.dart';
 import 'package:decisionroll/utilities/colors.dart';
@@ -53,7 +53,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 //           ),
 //           GoRoute(
 //             path: 'decisions',
-//             builder: (context, state) => const DecisionPage(),
+//             builder: (context, state) => const UserDecisionsPage(),
 //           ),
 //           GoRoute(
 //             path: 'profile',
@@ -74,20 +74,20 @@ final tabs = [
     label: 'Home',
   ),
   const ScaffoldWithNavBarTabItem(
-    initialLocation: '/decisions/1',
+    initialLocation: '/user/1/decisions',
     icon: Icon(
       FontAwesomeIcons.dice,
       color: blueColor,
     ),
-    label: 'Decisions',
+    label: 'My Decisions',
   ),
   const ScaffoldWithNavBarTabItem(
-    initialLocation: '/profile/1',
+    initialLocation: '/account',
     icon: Icon(
       FontAwesomeIcons.user,
       color: blueColor,
     ),
-    label: 'Profile',
+    label: 'Account',
   ),
 ];
 
@@ -113,21 +113,21 @@ final goRouter = GoRouter(
             path: '/homepage', builder: (context, state) => const HomePage()),
         // Shopping Cart
         GoRoute(
-            path: '/decisions/:id',
+            path: '/user/:uid/decisions',
             builder: (context, state) {
-              final id = state.params['id'];
-              return DecisionPage(
-                userId: id.toString(),
+              final userId = state.params['uid'];
+              return UserDecisionsPage(
+                userId: userId.toString(),
               );
             }),
 
         GoRoute(
-            path: '/profile/:id',
+            path: '/account',
             builder: (context, state) {
-              final id = state.params['id'];
-              return ProfilePage(
-                userId: id.toString(),
-              );
+              // final id = state.params['id'];
+              return const ProfilePage(
+                  // userId: id.toString(),
+                  );
             }),
       ],
     ),

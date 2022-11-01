@@ -20,14 +20,6 @@ class SignUpVerifyPage extends ConsumerStatefulWidget {
 
 class _SignUpVerifyPageState extends ConsumerState<SignUpVerifyPage> {
   @override
-  void initState() {
-    // TODO: implement initState
-    ref.read(emailLoginVerificationProvider);
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final response = ref.watch(emailLoginVerificationProvider);
 
@@ -66,7 +58,7 @@ class _SignUpVerifyPageState extends ConsumerState<SignUpVerifyPage> {
                 response.maybeWhen(
                     orElse: () => const SizedBox(),
                     data: (data) {
-                      print("DATA IS: $data");
+                      // print("DATA IS: $data");
                       var modeledJson = json.decode(response.value.toString());
                       // Save User Access Token To Device
                       saveUserDetails() async {
