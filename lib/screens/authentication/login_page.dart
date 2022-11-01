@@ -58,7 +58,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             isLoading = true;
                           });
 
-                          GoRouter.of(context).go('/homescreen');
+                          GoRouter.of(context).go('/homepage');
                         },
                   child: isLoading == true
                       ? const Center(child: CircularProgressIndicator())

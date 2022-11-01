@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
+import 'package:decisionroll/screens/authentication/login_page.dart';
 import 'package:decisionroll/screens/decisions/user_decisions_page.dart';
 import 'package:decisionroll/screens/account/account_page.dart';
 import 'package:decisionroll/screens/homescreen/homepage.dart';
@@ -92,14 +93,18 @@ final tabs = [
 ];
 
 final goRouter = GoRouter(
-  initialLocation: '/homepage',
+  initialLocation: '/authwrapper',
   navigatorKey: _rootNavigatorKey,
   debugLogDiagnostics: true,
   routes: [
-    // GoRoute(
-    //   path: 'auth',
-    //   builder: (context, state) => const LoginPage(),
-    // ),
+    GoRoute(
+      path: '/auth',
+      builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: '/authwrapper',
+      builder: (context, state) => const AuthenticationWrapper(),
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
@@ -108,10 +113,8 @@ final goRouter = GoRouter(
         return ScaffoldWithBottomNavBar(tabs: tabs, child: child);
       },
       routes: [
-        // Products
         GoRoute(
             path: '/homepage', builder: (context, state) => const HomePage()),
-        // Shopping Cart
         GoRoute(
             path: '/user/:uid/decisions',
             builder: (context, state) {
@@ -120,7 +123,6 @@ final goRouter = GoRouter(
                 userId: userId.toString(),
               );
             }),
-
         GoRoute(
             path: '/account',
             builder: (context, state) {
@@ -257,7 +259,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
           savedUserId = userId;
           savedToken = token;
           savedUserEmail = userEmail;
-          context.go('/home');
+          context.go('/homepage');
         } else {
           context.go('/auth');
         }
