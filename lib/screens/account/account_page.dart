@@ -1,3 +1,5 @@
+import 'package:decisionroll/common/my_appbar.dart';
+import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
@@ -15,22 +17,25 @@ class AccountPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+        backgroundColor: whiteBackgroundColor,
+        appBar: const MyAppBar(),
+        drawer: MyDrawer(),
         body: Center(
-      child: InkWell(
-        onTap: () {
-          ref
-              .read(authenticationProvider)
-              .signOut()
-              .whenComplete(() => GoRouter.of(context).go('/authwrapper'));
-        },
-        child: SizedBox(
-            width: SizeConfig.screenWidth,
-            child: OptionView(
-              blueColor,
-              'SignOut',
-              padding: 15,
-            )),
-      ),
-    ));
+          child: InkWell(
+            onTap: () {
+              ref
+                  .read(authenticationProvider)
+                  .signOut()
+                  .whenComplete(() => GoRouter.of(context).go('/authwrapper'));
+            },
+            child: SizedBox(
+                width: SizeConfig.screenWidth,
+                child: OptionView(
+                  blueColor,
+                  'SignOut',
+                  padding: 15,
+                )),
+          ),
+        ));
   }
 }

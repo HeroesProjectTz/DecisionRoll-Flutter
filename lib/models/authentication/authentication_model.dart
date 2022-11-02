@@ -43,13 +43,15 @@ class Authentication {
   }
 
   // SignUp the user using Email and Password
-  Future signUpWithEmailAndPassword(
-      String email, String password, BuildContext context) async {
+  Future signUpWithEmailAndPassword(String username, String email,
+      String password, BuildContext context) async {
     try {
-      _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      _auth
+          .createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          )
+          .then((value) => value.user!.updateDisplayName(username));
       return 'success';
     } on FirebaseAuthException catch (e) {
       await showDialog(
@@ -156,5 +158,11 @@ class Authentication {
   //  SignOut the current user
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  // Current userName
+  String getCurrentUserName() {
+    String username = _auth.currentUser!.displayName.toString();
+    return username;
   }
 }
