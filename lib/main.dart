@@ -5,6 +5,7 @@ import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/screens/authentication/login_page.dart';
 import 'package:decisionroll/screens/authentication/sign_up_page.dart';
+import 'package:decisionroll/screens/decisions/decision_page.dart';
 import 'package:decisionroll/screens/users/user_decisions_page.dart';
 import 'package:decisionroll/screens/account/account_page.dart';
 import 'package:decisionroll/screens/home/homepage.dart';
@@ -86,6 +87,14 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/authwrapper',
       builder: (context, state) => const AuthenticationWrapper(),
+    ),
+    GoRoute(
+      path: '/decision/:decisionid',
+      builder: (context, state) {
+        final decisionId = state.params['decisionid'];
+
+        return const DecisionPage();
+      },
     ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
