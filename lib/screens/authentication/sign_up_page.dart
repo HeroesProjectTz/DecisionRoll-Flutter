@@ -19,6 +19,7 @@ class SignUpPage extends ConsumerStatefulWidget {
 
 class _SignUpPageState extends ConsumerState<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController comfirmPasswordController =
       TextEditingController();
@@ -60,7 +61,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.08,
+                  height: SizeConfig.screenHeight! * 0.04,
+                ),
+                TextFieldWidget(
+                    texttFieldController: userNameController,
+                    hintText: 'Enter your username'),
+                SizedBox(
+                  height: SizeConfig.screenHeight! * 0.05,
                 ),
                 TextFieldWidget(
                     texttFieldController: emailController,
@@ -132,6 +139,16 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                 content: Text('Password is required'),
                               ),
                             );
+                          } else if (userNameController.text == '') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.only(
+                                    right: 10, left: 10, bottom: 10),
+                                backgroundColor: blueColor,
+                                content: Text('Username is required'),
+                              ),
+                            );
                           } else if (comfirmPasswordController.text == '') {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -160,6 +177,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                             ref
                                 .read(authenticationProvider)
                                 .signUpWithEmailAndPassword(
+                                    userNameController.text,
                                     emailController.text,
                                     passwordController.text,
                                     context)
