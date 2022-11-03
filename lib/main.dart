@@ -4,6 +4,7 @@ import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
+import 'package:decisionroll/providers/socket/socket_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 Future<void> main() async {
+  // SocketService().initConnection();
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
@@ -85,6 +87,8 @@ class AuthenticationWrapper extends ConsumerWidget {
     return authState.when(
         data: (data) {
           if (data != null) {
+            ref.read(socketServiceProvider).sessionActivated(
+                data.uid, data.email.toString(), data.displayName.toString());
             WidgetsBinding.instance.addPostFrameCallback((_) {
               context.go('/homepage');
             });
