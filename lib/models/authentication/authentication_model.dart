@@ -163,9 +163,15 @@ class Authentication {
     return fullName;
   }
 
+  // Current userName
+  String getCurrentUserUID() {
+    String uid = _auth.currentUser!.uid.toString();
+    return uid;
+  }
+
   // Function to address final final complete
 
-  firebaseAuthComplete(String fullName, String email, String userId) {
+  uerSessionActivated(String fullName, String email, String userId) {
     // Todo call socket to complete registration and add to Mongo
   }
 }
