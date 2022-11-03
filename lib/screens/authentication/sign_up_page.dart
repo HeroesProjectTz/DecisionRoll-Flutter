@@ -4,7 +4,6 @@ import 'package:decisionroll/common/textfield_widget.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:decisionroll/utilities/images.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +18,7 @@ class SignUpPage extends ConsumerStatefulWidget {
 
 class _SignUpPageState extends ConsumerState<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController comfirmPasswordController =
       TextEditingController();
@@ -64,8 +63,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   height: SizeConfig.screenHeight! * 0.04,
                 ),
                 TextFieldWidget(
-                    texttFieldController: userNameController,
-                    hintText: 'Enter your username'),
+                    texttFieldController: fullNameController,
+                    hintText: 'Enter your full name'),
                 SizedBox(
                   height: SizeConfig.screenHeight! * 0.05,
                 ),
@@ -139,14 +138,14 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                 content: Text('Password is required'),
                               ),
                             );
-                          } else if (userNameController.text == '') {
+                          } else if (fullNameController.text == '') {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
                                     right: 10, left: 10, bottom: 10),
                                 backgroundColor: blueColor,
-                                content: Text('Username is required'),
+                                content: Text('Full Name is required'),
                               ),
                             );
                           } else if (comfirmPasswordController.text == '') {
@@ -177,14 +176,14 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                             ref
                                 .read(authenticationProvider)
                                 .signUpWithEmailAndPassword(
-                                    userNameController.text,
+                                    fullNameController.text,
                                     emailController.text,
                                     passwordController.text,
                                     context)
                                 .then((value) {
-                              if (value == 'success') {
-                                GoRouter.of(context).go('/homepage');
-                              }
+                              debugPrint(
+                                  "email sign up complete. Return: $value");
+                              GoRouter.of(context).go('/authwrapper');
                             });
                             if (mounted) {
                               setState(() {
@@ -237,12 +236,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         .read(authenticationProvider)
                         .signInWithGoogle(context)
                         .then((value) {
-                      if (kIsWeb) {
-                        GoRouter.of(context).go('/authwrapper');
-                      }
-                      if (value == 'success') {
-                        GoRouter.of(context).go('/homepage');
-                      }
+                      debugPrint("email sign up complete. Return: $value");
+                      GoRouter.of(context).go('/authwrapper');
                     });
                   },
                   child: Container(

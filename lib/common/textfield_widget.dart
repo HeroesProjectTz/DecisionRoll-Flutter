@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class TextFieldWidget extends StatelessWidget {
@@ -30,7 +29,6 @@ class TextFieldWidget extends StatelessWidget {
       controller: texttFieldController,
       obscureText: obscureText!,
       onSubmitted: onSubmitted,
-      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))],
       decoration: InputDecoration(
         hintText: hintText,
         suffixIcon: suffixIcon,
