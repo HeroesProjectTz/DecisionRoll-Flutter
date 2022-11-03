@@ -60,6 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: SizeConfig.screenHeight! * 0.08,
                 ),
                 TextFieldWidget(
+                    isEmail: true,
                     texttFieldController: emailController,
                     hintText: 'Enter your email'),
                 SizedBox(

@@ -70,6 +70,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 ),
                 TextFieldWidget(
                     texttFieldController: emailController,
+                    isEmail: true,
                     hintText: 'Enter your email'),
                 SizedBox(
                   height: SizeConfig.screenHeight! * 0.05,
