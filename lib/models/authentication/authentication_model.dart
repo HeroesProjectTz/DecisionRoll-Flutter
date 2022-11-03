@@ -23,7 +23,6 @@ class Authentication {
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return 'success';
     } on FirebaseAuthException catch (e) {
       await showDialog(
         context: context,
@@ -43,7 +42,7 @@ class Authentication {
   }
 
   // SignUp the user using Email and Password
-  Future signUpWithEmailAndPassword(String username, String email,
+  Future signUpWithEmailAndPassword(String fullName, String email,
       String password, BuildContext context) async {
     try {
       _auth
@@ -51,8 +50,7 @@ class Authentication {
             email: email,
             password: password,
           )
-          .then((value) => value.user!.updateDisplayName(username));
-      return 'success';
+          .then((value) => value.user!.updateDisplayName(fullName));
     } on FirebaseAuthException catch (e) {
       await showDialog(
           context: context,
@@ -109,7 +107,6 @@ class Authentication {
 
       try {
         await _auth.signInWithCredential(credential);
-        return 'success';
       } on FirebaseAuthException catch (e) {
         await showDialog(
           context: context,
@@ -161,8 +158,14 @@ class Authentication {
   }
 
   // Current userName
-  String getCurrentUserName() {
-    String username = _auth.currentUser!.displayName.toString();
-    return username;
+  String getCurrentUserFullName() {
+    String fullName = _auth.currentUser!.displayName.toString();
+    return fullName;
+  }
+
+  // Function to address final final complete
+
+  firebaseAuthComplete(String fullName, String email, String userId) {
+    // Todo call socket to complete registration and add to Mongo
   }
 }

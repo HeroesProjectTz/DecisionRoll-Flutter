@@ -9,6 +9,7 @@ class TextFieldWidget extends StatelessWidget {
     required this.hintText,
     this.obscureText = false,
     this.enabled = true,
+    this.isEmail = false,
     this.onSubmitted,
     this.textInputType = TextInputType.name,
     this.prefixIcon,
@@ -22,6 +23,7 @@ class TextFieldWidget extends StatelessWidget {
   bool? obscureText;
   Function(String)? onSubmitted;
   bool? enabled;
+  bool? isEmail;
   TextInputType? textInputType;
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,9 @@ class TextFieldWidget extends StatelessWidget {
       controller: texttFieldController,
       obscureText: obscureText!,
       onSubmitted: onSubmitted,
-      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))],
+      inputFormatters: isEmail!
+          ? [FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))]
+          : null,
       decoration: InputDecoration(
         hintText: hintText,
         suffixIcon: suffixIcon,

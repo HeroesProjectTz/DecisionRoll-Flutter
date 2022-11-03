@@ -23,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       drawer: MyDrawer(),
       body: Center(
         child: Text(
-          "Homepage + ${ref.read(authenticationProvider).getCurrentUserName()}",
+          "Homepage + ${ref.read(authenticationProvider).getCurrentUserFullName()}",
           style: const TextStyle(
             color: Colors.black,
           ),

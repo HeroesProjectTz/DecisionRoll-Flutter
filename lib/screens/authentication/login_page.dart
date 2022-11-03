@@ -4,7 +4,6 @@ import 'package:decisionroll/common/textfield_widget.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:decisionroll/utilities/images.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,6 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: SizeConfig.screenHeight! * 0.08,
                 ),
                 TextFieldWidget(
+                    isEmail: true,
                     texttFieldController: emailController,
                     hintText: 'Enter your email'),
                 SizedBox(
@@ -121,9 +121,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     passwordController.text,
                                     context)
                                 .then((value) {
-                              if (value == 'success') {
-                                GoRouter.of(context).go('/homepage');
-                              }
+                              debugPrint(
+                                  "email sign in complete. Return: $value");
+                              GoRouter.of(context).go('/authwrapper');
                             });
                             if (mounted) {
                               setState(() {
@@ -176,12 +176,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         .read(authenticationProvider)
                         .signInWithGoogle(context)
                         .then((value) {
-                      if (kIsWeb) {
-                        GoRouter.of(context).go('/authwrapper');
-                      }
-                      if (value == 'success') {
-                        GoRouter.of(context).go('/homepage');
-                      }
+                      debugPrint("email sign in complete. Return: $value");
+                      GoRouter.of(context).go('/authwrapper');
                     });
                   },
                   child: Container(
@@ -216,8 +212,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 InkWell(
                   onTap: () {
-                    ref.read(authenticationProvider).signInWithFacebook().then(
-                        (value) => GoRouter.of(context).go('/authwrapper'));
+                    ref
+                        .read(authenticationProvider)
+                        .signInWithFacebook()
+                        .then((value) {
+                      // debugPrint("email sign in complete. Return: ${value.toString()}");
+                      GoRouter.of(context).go('/authwrapper');
+                    });
                   },
                   child: Container(
                     decoration: BoxDecoration(
