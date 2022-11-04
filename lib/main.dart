@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
@@ -14,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 Future<void> main() async {
+  // SocketService().initConnection();
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(

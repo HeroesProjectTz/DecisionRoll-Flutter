@@ -21,10 +21,10 @@ class _HomePageState extends ConsumerState<HomePage> {
       backgroundColor: whiteBackgroundColor,
       appBar: const MyAppBar(),
       drawer: MyDrawer(),
-      body: Center(
+      body: const Center(
         child: Text(
-          "Homepage + ${ref.read(authenticationProvider).getCurrentUserFullName()}",
-          style: const TextStyle(
+          "Homepage ",
+          style: TextStyle(
             color: Colors.black,
           ),
         ),
