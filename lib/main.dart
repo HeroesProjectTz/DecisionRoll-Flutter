@@ -10,10 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 
 Future<void> main() async {
-  // SocketService().initConnection();
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
@@ -29,7 +27,6 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-late io.Socket socket;
 String savedUserId = "";
 String savedToken = "";
 String savedUserEmail = "";
