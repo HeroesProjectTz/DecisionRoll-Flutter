@@ -17,7 +17,7 @@ class UserDecisionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final decisions = ref.watch(decisionStreamProvider);
+    final decisions = ref.watch(userDecisionsStreamProvider);
     return Scaffold(
       backgroundColor: whiteBackgroundColor,
       appBar: const MyAppBar(),
