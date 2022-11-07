@@ -19,7 +19,7 @@ class DecisionPage extends StatelessWidget {
     ];
     return Scaffold(
         backgroundColor: whiteBackgroundColor,
-        appBar: const MyAppBar(),
+        appBar: MyAppBar(),
         drawer: MyDrawer(),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
