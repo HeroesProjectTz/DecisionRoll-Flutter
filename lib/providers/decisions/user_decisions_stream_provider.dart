@@ -27,3 +27,15 @@ final userDecisionsStreamProvider =
 
   return decisionListStream;
 });
+
+// final adduserDecisionProvider = Provider.family<UserModel, String>((ref, uid) {
+//   final db = ref.watch(databaseProvider);
+//   final decision = db.collection('decisions').add(DecisionModel(
+//           owner: UserModel(
+//               uid: uid,
+//               name: ref.read(authenticationProvider).getCurrentUserFullName()),
+//           title: '',
+//           weight: '0')
+//       .toJson());
+//   return decision;
+// });
