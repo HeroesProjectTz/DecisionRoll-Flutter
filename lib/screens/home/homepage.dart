@@ -17,9 +17,10 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
+    debugPrint("homepage loaded");
     return Scaffold(
       backgroundColor: whiteBackgroundColor,
-      appBar: const MyAppBar(),
+      appBar: MyAppBar(),
       drawer: MyDrawer(),
       body: const Center(
         child: Text(

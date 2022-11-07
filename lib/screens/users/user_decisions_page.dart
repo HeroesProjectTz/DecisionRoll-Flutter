@@ -17,10 +17,11 @@ class UserDecisionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    debugPrint("user decisions page: $userId");
     final decisionsAsync = ref.watch(userDecisionsStreamProvider(userId));
     return Scaffold(
       backgroundColor: whiteBackgroundColor,
-      appBar: const MyAppBar(),
+      appBar: MyAppBar(),
       drawer: MyDrawer(),
       body: decisionsAsync.maybeWhen(
           orElse: () => const SizedBox(
