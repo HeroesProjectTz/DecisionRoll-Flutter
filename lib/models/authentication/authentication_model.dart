@@ -172,6 +172,6 @@ class Authentication {
   // Function to address final final complete
 
   uerSessionActivated(String fullName, String email, String userId) {
-    // Todo call socket to complete registration and add to Mongo
+    // Todo maybe create and load Firebase user here
   }
 }

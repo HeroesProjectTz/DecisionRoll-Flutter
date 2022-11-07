@@ -26,7 +26,14 @@ class DecisionModel {
         owner: map['owner'] ?? UserModel(name: '', uid: ''));
   }
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'owner': owner,
+      // 'state': state,
+      'weight': weight
+    };
+  }
 
   factory DecisionModel.fromJson(String source) =>
       DecisionModel.fromMap(json.decode(source));

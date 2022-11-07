@@ -18,7 +18,7 @@ class AccountPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         backgroundColor: whiteBackgroundColor,
-        appBar: const MyAppBar(),
+        appBar: MyAppBar(),
         drawer: MyDrawer(),
         body: Center(
           child: InkWell(
