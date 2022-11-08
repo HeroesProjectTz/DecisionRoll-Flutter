@@ -10,6 +10,7 @@ class BubbleLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Lottie.asset(bubbleloadingIcon, alignment: Alignment.center));
+        // child: Lottie.asset(bubbleloadingIcon, alignment: Alignment.center));
+        child: CircularProgressIndicator());
   }
 }
