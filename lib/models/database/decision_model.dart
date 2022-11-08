@@ -1,21 +1,34 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DecisionModel {
-  String id;
-  String ownerId;
-  String title;
-  String outcome;
-  String state;
+  final DocumentSnapshot snapshot;
+  final String id;
+  final String ownerId;
+  final String title;
+  final String? outcome;
+  final String state;
 
-  DecisionModel({
+  const DecisionModel({
+    required this.snapshot,
     required this.id,
     required this.ownerId,
     required this.title,
     required this.outcome,
     required this.state,
   });
+
+  factory DecisionModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final map = snapshot.data() ?? {};
+
+    return DecisionModel(
+        snapshot: snapshot,
+        id: snapshot.id,
+        ownerId: map['ownerId'] ?? '<missing ownerId>',
+        title: map['title'] ?? '<missing title>',
+        outcome: map['outcome'],
+        state: map['state'] ?? 'new');
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,26 +39,7 @@ class DecisionModel {
     };
   }
 
-  factory DecisionModel.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final map = snapshot.data() ?? {};
-    map['id'] = snapshot.id;
-    return DecisionModel.fromMap(map);
-  }
-
-  factory DecisionModel.fromMap(Map<String, dynamic> map) {
-    return DecisionModel(
-        id: map['id'] ?? '',
-        ownerId: map['ownerId'] ?? '',
-        title: map['title'] ?? '',
-        outcome: map['outcome'] ?? '',
-        state: map['state'] ?? '');
-  }
-
   String toJson() {
     return toMap().toString();
   }
-
-  factory DecisionModel.fromJson(String source) =>
-      DecisionModel.fromMap(json.decode(source));
 }
