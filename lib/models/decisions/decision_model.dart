@@ -3,36 +3,37 @@ import 'dart:convert';
 import 'package:decisionroll/models/decisions/user_model.dart';
 
 class DecisionModel {
-  UserModel owner;
+  String id;
+  String ownerId;
   String title;
-  String weight;
+  String state;
+
   DecisionModel({
+    required this.id,
+    required this.ownerId,
     required this.title,
-    required this.weight,
-    required this.owner,
+    required this.state,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'title': title,
-      'weight': weight,
+      'ownerId': ownerId,
+      'title': title,
+      'state': state,
     };
   }
 
   factory DecisionModel.fromMap(Map<String, dynamic> map) {
     return DecisionModel(
+        id: map['id'] ?? '',
+        ownerId: map['ownerId'] ?? '',
         title: map['title'] ?? '',
-        weight: map['weight'] ?? '',
-        owner: map['owner'] ?? UserModel(name: '', uid: ''));
+        state: map['state'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'owner': owner,
-      // 'state': state,
-      'weight': weight
-    };
+  String toJson() {
+    return toMap().toString();
   }
 
   factory DecisionModel.fromJson(String source) =>

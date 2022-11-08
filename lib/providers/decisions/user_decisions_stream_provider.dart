@@ -9,8 +9,9 @@ final userDecisionsStreamProvider =
   final decisionsQuery =
       db.collection('decisions').where('ownerId', isEqualTo: ownerId);
   final decisionsRef = decisionsQuery.withConverter<DecisionModel>(
+      //TODO: get decision's documentId and pass to DecisionModel.id
       fromFirestore: (snapshot, _) => DecisionModel.fromMap(snapshot.data()!),
-      toFirestore: (decision, _) => decision.toJson());
+      toFirestore: (decision, _) => decision.toMap());
   final Stream<QuerySnapshot<DecisionModel>> decisionQuerySnapshotStream =
       decisionsRef.snapshots();
 
