@@ -49,7 +49,7 @@ final goRouter = GoRouter(
           if (userId != null) {
             return UserDecisionsPage(userId: userId);
           } else {
-            throw ("missing UserDecisionsPage param");
+            throw ("missing userId param");
           }
         }),
     GoRoute(
