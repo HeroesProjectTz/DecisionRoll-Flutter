@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decisionroll/models/decisions/decision_model.dart';
+import 'package:decisionroll/models/database/decision_model.dart';
 import 'package:decisionroll/providers/database/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
