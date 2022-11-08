@@ -61,9 +61,11 @@ class DecisionPage extends ConsumerWidget {
                   Expanded(
                     flex: 1,
                     child: Container(
-                        color: blueColor05,
+                        decoration: BoxDecoration(
+                            color: blueColor05,
+                            borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 10),
+                            horizontal: 15, vertical: 7),
                         child: Row(
                           children: const [
                             Expanded(

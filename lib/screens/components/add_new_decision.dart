@@ -27,13 +27,16 @@ class AddNewDecisionWidget extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            color: blueColor05,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: const Text(
-              "Create",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            decoration: BoxDecoration(
+                color: blueColor05, borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12.8),
+            child: const Center(
+              child: Text(
+                "Create",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

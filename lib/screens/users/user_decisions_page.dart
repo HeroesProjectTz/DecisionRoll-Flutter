@@ -58,6 +58,7 @@ class UserDecisionsPage extends ConsumerWidget {
                           GoRouter.of(context).push('/decision/${decision.id}');
                         },
                         child: Container(
+                            margin: const EdgeInsets.only(top: 12),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
@@ -71,7 +72,10 @@ class UserDecisionsPage extends ConsumerWidget {
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: propList([
-                                    propText('Outcome: ', decision.outcome),
+                                    decision.outcome == ''
+                                        ? propText('', '')
+                                        : propText(
+                                            'Outcome: ', decision.outcome),
                                     propText('Owner: ', decision.ownerId),
                                     propText('State: ', decision.state),
                                   ]))
