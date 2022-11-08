@@ -2,7 +2,7 @@ import 'package:decisionroll/models/database/decision_model.dart';
 import 'package:decisionroll/providers/database/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final userDecisionsStreamProvider =
+final userDecisionsProvider =
     StreamProvider.family<List<DecisionModel>, String>((ref, ownerId) {
   final db = ref.watch(databaseProvider);
   final rawDecisionsQuery =
