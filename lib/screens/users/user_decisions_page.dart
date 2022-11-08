@@ -75,7 +75,7 @@ class UserDecisionsPage extends ConsumerWidget {
                         InkWell(
                       onTap: () {
                         GoRouter.of(context).push(
-                            '/decision/${ref.read(authenticationProvider).getCurrentUserUID()}/details',
+                            '/decision/${ref.read(authenticationProvider).getCurrentUserUID()}',
                             extra: DecisionModel(
                                 owner: UserModel(name: '', uid: ''),
                                 weight: '0',
