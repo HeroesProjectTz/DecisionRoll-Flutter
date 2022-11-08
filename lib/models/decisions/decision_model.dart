@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:decisionroll/models/decisions/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DecisionModel {
   String id;
@@ -22,6 +22,13 @@ class DecisionModel {
       'title': title,
       'state': state,
     };
+  }
+
+  factory DecisionModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final map = snapshot.data() ?? {};
+    map['id'] = snapshot.id;
+    return DecisionModel.fromMap(map);
   }
 
   factory DecisionModel.fromMap(Map<String, dynamic> map) {
