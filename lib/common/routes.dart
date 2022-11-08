@@ -31,9 +31,13 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/decision/:decisionid',
       builder: (context, state) {
-        // final decisionId = state.params['decisionid'];
+        final decisionId = state.params['decisionid'];
 
-        return DecisionPage();
+        if (decisionId != null) {
+          return DecisionPage(decisionId: decisionId);
+        } else {
+          throw ("missing decisionId param");
+        }
       },
     ),
     GoRoute(path: '/homepage', builder: (context, state) => const HomePage()),
@@ -41,9 +45,12 @@ final goRouter = GoRouter(
         path: '/user/:uid/decisions',
         builder: (context, state) {
           final userId = state.params['uid'];
-          return UserDecisionsPage(
-            userId: userId.toString(),
-          );
+
+          if (userId != null) {
+            return UserDecisionsPage(userId: userId);
+          } else {
+            throw ("missing UserDecisionsPage param");
+          }
         }),
     GoRoute(
         path: '/account',
