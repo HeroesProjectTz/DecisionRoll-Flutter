@@ -51,7 +51,7 @@ class DecisionPage extends ConsumerWidget {
                         contentPadding: EdgeInsets.all(15),
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: "Enter your title to create new roll",
+                        hintText: "Enter option 1",
                         hintStyle: TextStyle(
                           color: Color(0xff545454),
                         ),
