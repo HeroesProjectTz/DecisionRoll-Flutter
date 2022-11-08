@@ -22,7 +22,7 @@ class UserDecisionsPage extends ConsumerWidget {
   }) : super(key: key);
   final TextEditingController newDecisionController = TextEditingController();
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext c, WidgetRef ref) {
     debugPrint("user decisions page: $userId");
     final decisionsAsync = ref.watch(userDecisionsStreamProvider(userId));
     return Scaffold(
@@ -38,8 +38,8 @@ class UserDecisionsPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: SizeConfig.screenHeight! * 0.1,
-              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight(c) * 0.1,
+              width: SizeConfig.screenWidth(c),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -59,7 +59,7 @@ class UserDecisionsPage extends ConsumerWidget {
                 ],
               ),
             ),
-            SizedBox(height: SizeConfig.screenHeight! * 0.05),
+            SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
             decisionsAsync.maybeWhen(
                 orElse: () => const SizedBox(
                       child: Text("no dataa..."),

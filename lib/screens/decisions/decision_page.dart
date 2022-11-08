@@ -17,8 +17,8 @@ class DecisionPage extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    String goRouterLocation = GoRouter.of(context).location;
+  Widget build(BuildContext c, WidgetRef ref) {
+    String goRouterLocation = GoRouter.of(c).location;
     String location = goRouterLocation;
 
     String locationUid = location.replaceAll("/decision/", "");
@@ -47,7 +47,7 @@ class DecisionPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: SizeConfig.screenHeight! * 0.2),
+              SizedBox(height: SizeConfig.screenHeight(c) * 0.1),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -76,7 +76,7 @@ class DecisionPage extends ConsumerWidget {
                               child: Icon(FontAwesomeIcons.angleLeft,
                                   color: Colors.white, size: 13),
                             ),
-                            SizedBox(width: SizeConfig.screenWidth! * 0.01),
+                            SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
                             const CircleAvatar(
                                 radius: 17,
                                 backgroundColor: whiteBackgroundColor,
@@ -85,7 +85,7 @@ class DecisionPage extends ConsumerWidget {
                                       color: blueColor04,
                                       fontWeight: FontWeight.bold,
                                     ))),
-                            SizedBox(width: SizeConfig.screenWidth! * 0.01),
+                            SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
                             const CircleAvatar(
                               radius: 15,
                               backgroundColor: blueColor04,
@@ -97,10 +97,10 @@ class DecisionPage extends ConsumerWidget {
                       ))
                 ],
               ),
-              SizedBox(height: SizeConfig.screenHeight! * 0.05),
+              SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
               Center(
                 child: SizedBox(
-                  width: SizeConfig.screenWidth! / 2,
+                  width: SizeConfig.screenWidth(c) / 2,
                   child: InkWell(
                       onTap: () {},
                       child: OptionView(

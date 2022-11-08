@@ -7,7 +7,7 @@ class ListDecisionsShimmer extends StatelessWidget {
   const ListDecisionsShimmer({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext c) {
     return Container(
       color: const Color(0xffF1FAEE),
       width: double.infinity,
@@ -31,7 +31,7 @@ class ListDecisionsShimmer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: SizeConfig.screenWidth! * 0.04,
+                            width: SizeConfig.screenWidth(c) * 0.04,
                           ),
                           Expanded(
                             child: Column(
@@ -52,7 +52,7 @@ class ListDecisionsShimmer extends StatelessWidget {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400)),
                                       SizedBox(
-                                        width: SizeConfig.screenWidth! * 0.04,
+                                        width: SizeConfig.screenWidth(c) * 0.04,
                                       ),
                                       const Text("",
                                           style: TextStyle(

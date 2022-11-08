@@ -25,9 +25,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   bool isLoading = false;
   bool obscureText = true;
   @override
-  Widget build(BuildContext context) {
-    SizeConfig(context);
-
+  Widget build(BuildContext c) {
     return Scaffold(
         backgroundColor: const Color(0xffF1FAEE),
         body: Padding(
@@ -40,7 +38,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.04,
+                  height: SizeConfig.screenHeight(c) * 0.04,
                 ),
                 const Text(
                   "Decision Roll",
@@ -50,7 +48,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.02,
+                  height: SizeConfig.screenHeight(c) * 0.02,
                 ),
                 const Text(
                   "Create an account!",
@@ -60,20 +58,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.04,
+                  height: SizeConfig.screenHeight(c) * 0.04,
                 ),
                 TextFieldWidget(
                     texttFieldController: fullNameController,
                     hintText: 'Enter your full name'),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.05,
+                  height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 TextFieldWidget(
                     texttFieldController: emailController,
                     isEmail: true,
                     hintText: 'Enter your email'),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.05,
+                  height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 TextFieldWidget(
                     obscureText: obscureText,
@@ -93,7 +91,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     texttFieldController: passwordController,
                     hintText: 'password'),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.05,
+                  height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 TextFieldWidget(
                     obscureText: obscureText,
@@ -113,14 +111,14 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     texttFieldController: comfirmPasswordController,
                     hintText: 'comfirm password'),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.03,
+                  height: SizeConfig.screenHeight(c) * 0.03,
                 ),
                 InkWell(
                   onTap: isLoading == true
                       ? () {}
                       : () {
                           if (emailController.text == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -130,7 +128,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               ),
                             );
                           } else if (passwordController.text == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -140,7 +138,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               ),
                             );
                           } else if (fullNameController.text == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -150,7 +148,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               ),
                             );
                           } else if (comfirmPasswordController.text == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -161,7 +159,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                             );
                           } else if (passwordController.text !=
                               comfirmPasswordController.text) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -180,11 +178,11 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                     fullNameController.text,
                                     emailController.text,
                                     passwordController.text,
-                                    context)
+                                    c)
                                 .then((value) {
                               debugPrint(
                                   "email sign up complete. Return: $value");
-                              GoRouter.of(context).go('/authwrapper');
+                              GoRouter.of(c).go('/authwrapper');
                             });
                             if (mounted) {
                               setState(() {
@@ -196,7 +194,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   child: isLoading == true
                       ? const Center(child: CircularProgressIndicator())
                       : SizedBox(
-                          width: SizeConfig.screenWidth,
+                          width: (SizeConfig.screenWidth)(c),
                           child: OptionView(
                             blueColor,
                             'SignUp',
@@ -204,11 +202,11 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                           )),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.04,
+                  height: SizeConfig.screenHeight(c) * 0.04,
                 ),
                 InkWell(
                   onTap: () {
-                    GoRouter.of(context).go('/signin');
+                    GoRouter.of(c).go('/signin');
                   },
                   child: RichText(
                     text: const TextSpan(
@@ -229,16 +227,16 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.07,
+                  height: SizeConfig.screenHeight(c) * 0.07,
                 ),
                 InkWell(
                   onTap: () {
                     ref
                         .read(authenticationProvider)
-                        .signInWithGoogle(context)
+                        .signInWithGoogle(c)
                         .then((value) {
                       debugPrint("email sign up complete. Return: $value");
-                      GoRouter.of(context).go('/authwrapper');
+                      GoRouter.of(c).go('/authwrapper');
                     });
                   },
                   child: Container(
@@ -255,10 +253,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                       children: [
                         Image.asset(
                           googleIcon,
-                          height: SizeConfig.screenHeight! * 0.03,
+                          height: SizeConfig.screenHeight(c) * 0.03,
                         ),
                         SizedBox(
-                          width: SizeConfig.screenWidth! * 0.1,
+                          width: SizeConfig.screenWidth(c) * 0.1,
                         ),
                         const Text('SignIn  With Google',
                             style: TextStyle(
@@ -269,7 +267,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.05,
+                  height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -285,10 +283,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     children: [
                       Image.asset(
                         facebookIcon,
-                        height: SizeConfig.screenHeight! * 0.03,
+                        height: SizeConfig.screenHeight(c) * 0.03,
                       ),
                       SizedBox(
-                        width: SizeConfig.screenWidth! * 0.1,
+                        width: SizeConfig.screenWidth(c) * 0.1,
                       ),
                       const Text('SignIn  With Facebook',
                           style: TextStyle(
