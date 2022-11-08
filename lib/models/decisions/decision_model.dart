@@ -6,20 +6,22 @@ class DecisionModel {
   String id;
   String ownerId;
   String title;
+  String outcome;
   String state;
 
   DecisionModel({
     required this.id,
     required this.ownerId,
     required this.title,
+    required this.outcome,
     required this.state,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
       'ownerId': ownerId,
       'title': title,
+      'outcome': outcome,
       'state': state,
     };
   }
@@ -36,6 +38,7 @@ class DecisionModel {
         id: map['id'] ?? '',
         ownerId: map['ownerId'] ?? '',
         title: map['title'] ?? '',
+        outcome: map['outcome'] ?? '',
         state: map['state'] ?? '');
   }
 
