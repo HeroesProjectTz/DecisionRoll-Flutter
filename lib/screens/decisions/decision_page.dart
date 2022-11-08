@@ -8,15 +8,22 @@ import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
 
-  const DecisionPage({
+  DecisionPage({
     Key? key,
     required this.decisionId,
   }) : super(key: key);
 
+  final List<ChartData> chartData = [
+    ChartData('werewolf', 25, 3, const Color.fromRGBO(9, 0, 136, 1)),
+    ChartData('charades', 38, 4, const Color.fromRGBO(147, 0, 119, 1)),
+    ChartData('burrito', 34, 3, const Color.fromRGBO(228, 0, 124, 1)),
+    ChartData('hike', 52, 0, const Color.fromRGBO(255, 189, 57, 1))
+  ];
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     String goRouterLocation = GoRouter.of(c).location;
@@ -40,6 +47,30 @@ class DecisionPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Center(
+                child: Text("you have 4 votes remaining",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
+              ),
+              Expanded(
+                  child: SfCircularChart(series: <CircularSeries>[
+                // Renders doughnut chart
+                DoughnutSeries<ChartData, String>(
+                    animationDuration: 4500,
+                    animationDelay: 2000,
+                    dataSource: chartData,
+                    dataLabelSettings: const DataLabelSettings(
+                        isVisible: true, textStyle: TextStyle(fontSize: 12)),
+                    dataLabelMapper: (datum, index) {
+                      return '${datum.title}  '
+                          ' \n my votes: ${datum.myVotes} \n total: ${datum.totalVotes}';
+                    },
+                    pointColorMapper: (ChartData data, _) => data.color,
+                    xValueMapper: (ChartData data, _) => data.title,
+                    yValueMapper: (ChartData data, _) => data.totalVotes)
+              ])),
               SizedBox(height: SizeConfig.screenHeight(c) * 0.1),
               Row(
                 children: [
@@ -118,4 +149,12 @@ class DecisionPage extends ConsumerWidget {
           ),
         ));
   }
+}
+
+class ChartData {
+  ChartData(this.title, this.totalVotes, this.myVotes, [this.color]);
+  final String title;
+  final int myVotes;
+  final int totalVotes;
+  final Color? color;
 }
