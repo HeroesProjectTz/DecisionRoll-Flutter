@@ -71,11 +71,11 @@ class UserDecisionsPage extends ConsumerWidget {
                               Container(child: boldTextElem(decision.title)),
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: propList([
-                                    decision.outcome == ''
-                                        ? propText('', '')
-                                        : propText(
-                                            'Outcome: ', decision.outcome),
+                                  children: paddedWidgetList([
+                                    (decision.outcome != null)
+                                        ? propText(
+                                            'Outcome: ', decision.outcome)
+                                        : null,
                                     propText('Owner: ', decision.ownerId),
                                     propText('State: ', decision.state),
                                   ]))
@@ -98,14 +98,16 @@ class UserDecisionsPage extends ConsumerWidget {
                 fontSize: 15)));
   }
 
-  static List<Widget> propList(List<Widget> propertyTexts) {
-    return propertyTexts.map((propertyText) {
+  static List<Widget> paddedWidgetList(List<Widget?> maybeWidgets) {
+    final widgets = maybeWidgets.expand((e) => e == null ? [] : [e]);
+
+    return widgets.map((propertyText) {
       return Padding(
           padding: const EdgeInsets.only(top: 12.0), child: propertyText);
     }).toList();
   }
 
-  static Widget propText(String name, String value) {
+  static Widget propText(String name, String? value) {
     return RichText(
       text: TextSpan(
         text: name,
