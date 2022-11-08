@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:decisionroll/common/my_appbar.dart';
+import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
@@ -25,20 +27,8 @@ class DecisionPage extends ConsumerWidget {
     print(locationUid);
     return Scaffold(
         backgroundColor: whiteBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: whiteBackgroundColor,
-          elevation: 0.0,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          title: Text("Roll $locationUid",
-              style: const TextStyle(
-                color: blueColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              )),
-          centerTitle: true,
-        ),
+        appBar: MyAppBar(title: "Roll $locationUid"),
+        drawer: MyDrawer(),
         body: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 15.0,
@@ -66,7 +56,7 @@ class DecisionPage extends ConsumerWidget {
                         ),
                         padding: const EdgeInsets.symmetric(
                           vertical: 10,
-                          horizontal: 5,
+                          horizontal: 3,
                         ),
                         child: Row(
                           children: [
@@ -80,7 +70,7 @@ class DecisionPage extends ConsumerWidget {
                             const CircleAvatar(
                                 radius: 17,
                                 backgroundColor: whiteBackgroundColor,
-                                child: Text('4',
+                                child: Text('0',
                                     style: TextStyle(
                                       color: blueColor04,
                                       fontWeight: FontWeight.bold,

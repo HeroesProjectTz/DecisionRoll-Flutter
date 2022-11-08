@@ -4,9 +4,6 @@ import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
-import 'package:decisionroll/models/decisions/decision_model.dart';
-import 'package:decisionroll/models/decisions/user_model.dart';
-import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/providers/decisions/user_decisions_stream_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
@@ -70,102 +67,99 @@ class UserDecisionsPage extends ConsumerWidget {
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: decisionsList.length,
-                    itemBuilder: (context, index) =>
-                        // Text(decisionsList[index].title),
-                        InkWell(
-                      onTap: () {
-                        GoRouter.of(context).push(
-                            '/decision/${ref.read(authenticationProvider).getCurrentUserUID()}',
-                            extra: DecisionModel(
-                                owner: UserModel(name: '', uid: ''),
-                                weight: '0',
-                                title: decisionsList[index].title));
-                      },
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: blueColor02,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                            horizontal: 15,
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: 'Roll: ',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        fontSize: 15),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: decisionsList[index].title,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold)),
-                                      // TextSpan(text: ' world!'),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12.0),
-                                  child: RichText(
+                    itemBuilder: (context, index) {
+                      final decision = decisionsList[index];
+                      // Text(decisionsList[index].title),
+                      return InkWell(
+                        onTap: () {
+                          GoRouter.of(context).push('/decision/${decision.id}');
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: blueColor02,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 15,
+                            ),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
                                     text: TextSpan(
-                                      text: 'Outcome: ',
+                                      text: 'Roll: ',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                           fontSize: 15),
                                       children: <TextSpan>[
                                         TextSpan(
-                                            text: decisionsList[index].title,
+                                            text: decision.title,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         // TextSpan(text: ' world!'),
                                       ],
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12.0),
-                                  child: RichText(
-                                    text: const TextSpan(
-                                      text: 'Owner: ',
-                                      style: TextStyle(
-                                          // fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: 13),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: "Eliza",
-                                        ),
-                                        // TextSpan(text: ' world!'),
-                                      ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12.0),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: 'Outcome: ',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize: 15),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: decisionsList[index].title,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          // TextSpan(text: ' world!'),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12.0),
-                                  child: RichText(
-                                    text: const TextSpan(
-                                      text: 'Status: ',
-                                      style: TextStyle(
-                                          // fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: 13),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: 'Open',
-                                        ),
-                                        // TextSpan(text: ' world!'),
-                                      ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12.0),
+                                    child: RichText(
+                                      text: const TextSpan(
+                                        text: 'Owner: ',
+                                        style: TextStyle(
+                                            // fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize: 13),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: "Eliza",
+                                          ),
+                                          // TextSpan(text: ' world!'),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ])),
-                    ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12.0),
+                                    child: RichText(
+                                      text: const TextSpan(
+                                        text: 'Status: ',
+                                        style: TextStyle(
+                                            // fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize: 13),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: 'Open',
+                                          ),
+                                          // TextSpan(text: ' world!'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ])),
+                      );
+                    },
                   );
                 }),
           ],
