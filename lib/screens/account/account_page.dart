@@ -15,7 +15,7 @@ class AccountPage extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext c, WidgetRef ref) {
     return Scaffold(
         backgroundColor: whiteBackgroundColor,
         appBar: MyAppBar(),
@@ -26,10 +26,10 @@ class AccountPage extends ConsumerWidget {
               ref
                   .read(authenticationProvider)
                   .signOut()
-                  .whenComplete(() => GoRouter.of(context).go('/authwrapper'));
+                  .whenComplete(() => GoRouter.of(c).go('/authwrapper'));
             },
             child: SizedBox(
-                width: SizeConfig.screenWidth,
+                width: SizeConfig.screenWidth(c),
                 child: OptionView(
                   blueColor,
                   'SignOut',

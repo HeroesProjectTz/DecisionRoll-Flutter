@@ -22,9 +22,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   bool isLoading = false;
   bool obscureText = true;
   @override
-  Widget build(BuildContext context) {
-    SizeConfig(context);
-
+  Widget build(BuildContext c) {
     return Scaffold(
         backgroundColor: const Color(0xffF1FAEE),
         body: Padding(
@@ -37,7 +35,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.04,
+                  height: SizeConfig.screenHeight(c) * 0.04,
                 ),
                 const Text(
                   "Decision Roll",
@@ -47,7 +45,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.02,
+                  height: SizeConfig.screenHeight(c) * 0.02,
                 ),
                 const Text(
                   "Welcome Back!",
@@ -57,14 +55,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.08,
+                  height: SizeConfig.screenHeight(c) * 0.08,
                 ),
                 TextFieldWidget(
                     isEmail: true,
                     texttFieldController: emailController,
                     hintText: 'Enter your email'),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.05,
+                  height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 TextFieldWidget(
                     obscureText: obscureText,
@@ -84,14 +82,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     texttFieldController: passwordController,
                     hintText: 'password'),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.03,
+                  height: SizeConfig.screenHeight(c) * 0.03,
                 ),
                 InkWell(
                   onTap: isLoading == true
                       ? () {}
                       : () {
                           if (emailController.text == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -101,7 +99,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               ),
                             );
                           } else if (passwordController.text == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(c).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 margin: EdgeInsets.only(
@@ -119,11 +117,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 .signInWithEmailAndPassword(
                                     emailController.text,
                                     passwordController.text,
-                                    context)
+                                    c)
                                 .then((value) {
                               debugPrint(
                                   "email sign in complete. Return: $value");
-                              GoRouter.of(context).go('/authwrapper');
+                              GoRouter.of(c).go('/authwrapper');
                             });
                             if (mounted) {
                               setState(() {
@@ -135,7 +133,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   child: isLoading == true
                       ? const Center(child: CircularProgressIndicator())
                       : SizedBox(
-                          width: SizeConfig.screenWidth,
+                          width: SizeConfig.screenWidth(c),
                           child: OptionView(
                             blueColor,
                             'SignIn',
@@ -143,11 +141,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           )),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.04,
+                  height: SizeConfig.screenHeight(c) * 0.04,
                 ),
                 InkWell(
                   onTap: () {
-                    GoRouter.of(context).go('/signup');
+                    GoRouter.of(c).go('/signup');
                   },
                   child: RichText(
                     text: const TextSpan(
@@ -168,16 +166,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.15,
+                  height: SizeConfig.screenHeight(c) * 0.15,
                 ),
                 InkWell(
                   onTap: () {
                     ref
                         .read(authenticationProvider)
-                        .signInWithGoogle(context)
+                        .signInWithGoogle(c)
                         .then((value) {
                       debugPrint("email sign in complete. Return: $value");
-                      GoRouter.of(context).go('/authwrapper');
+                      GoRouter.of(c).go('/authwrapper');
                     });
                   },
                   child: Container(
@@ -194,10 +192,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       children: [
                         Image.asset(
                           googleIcon,
-                          height: SizeConfig.screenHeight! * 0.03,
+                          height: SizeConfig.screenHeight(c) * 0.03,
                         ),
                         SizedBox(
-                          width: SizeConfig.screenWidth! * 0.1,
+                          width: SizeConfig.screenWidth(c) * 0.1,
                         ),
                         const Text('SignIn  With Google',
                             style: TextStyle(
@@ -208,7 +206,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.05,
+                  height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 InkWell(
                   onTap: () {
@@ -217,7 +215,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         .signInWithFacebook()
                         .then((value) {
                       // debugPrint("email sign in complete. Return: ${value.toString()}");
-                      GoRouter.of(context).go('/authwrapper');
+                      GoRouter.of(c).go('/authwrapper');
                     });
                   },
                   child: Container(
@@ -234,10 +232,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       children: [
                         Image.asset(
                           facebookIcon,
-                          height: SizeConfig.screenHeight! * 0.03,
+                          height: SizeConfig.screenHeight(c) * 0.03,
                         ),
                         SizedBox(
-                          width: SizeConfig.screenWidth! * 0.1,
+                          width: SizeConfig.screenWidth(c) * 0.1,
                         ),
                         const Text('SignIn  With Facebook',
                             style: TextStyle(
