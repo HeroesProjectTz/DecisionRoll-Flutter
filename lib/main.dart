@@ -76,17 +76,15 @@ class AuthenticationWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SizeConfig(context);
-
     final authState = ref.watch(authStateProvider);
     return authState.when(
         data: (data) {
           if (data != null) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance?.addPostFrameCallback((_) {
               context.go('/homepage');
             });
           } else {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance?.addPostFrameCallback((_) {
               context.go('/signin');
             });
           }

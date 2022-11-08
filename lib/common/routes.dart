@@ -1,6 +1,4 @@
 import 'package:decisionroll/main.dart';
-import 'package:decisionroll/models/decisions/decision_model.dart';
-import 'package:decisionroll/providers/decisions/user_decision_details_page.dart';
 import 'package:decisionroll/screens/account/account_page.dart';
 import 'package:decisionroll/screens/authentication/login_page.dart';
 import 'package:decisionroll/screens/authentication/sign_up_page.dart';
@@ -31,16 +29,15 @@ final goRouter = GoRouter(
       builder: (context, state) => const AuthenticationWrapper(),
     ),
     GoRoute(
-        path: '/decision/:decisionid/details',
-        builder: (BuildContext context, GoRouterState state) =>
-            UserDecisionDetailsPage(
-                decisionModel: state.extra as DecisionModel)),
-    GoRoute(
       path: '/decision/:decisionid',
       builder: (context, state) {
         final decisionId = state.params['decisionid'];
 
-        return const DecisionPage();
+        if (decisionId != null) {
+          return DecisionPage(decisionId: decisionId);
+        } else {
+          throw ("missing decisionId param");
+        }
       },
     ),
     GoRoute(path: '/homepage', builder: (context, state) => const HomePage()),
@@ -48,9 +45,12 @@ final goRouter = GoRouter(
         path: '/user/:uid/decisions',
         builder: (context, state) {
           final userId = state.params['uid'];
-          return UserDecisionsPage(
-            userId: userId.toString(),
-          );
+
+          if (userId != null) {
+            return UserDecisionsPage(userId: userId);
+          } else {
+            throw ("missing UserDecisionsPage param");
+          }
         }),
     GoRoute(
         path: '/account',

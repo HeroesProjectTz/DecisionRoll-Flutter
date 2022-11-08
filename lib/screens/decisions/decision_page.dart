@@ -1,127 +1,117 @@
-import 'package:decisionroll/common/my_appbar.dart';
-import 'package:decisionroll/common/my_drawer.dart';
-import 'package:decisionroll/common/sizeConfig.dart';
-import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
-class DecisionPage extends StatelessWidget {
-  const DecisionPage({Key? key}) : super(key: key);
+import 'package:decisionroll/common/option_view.dart';
+import 'package:decisionroll/common/sizeConfig.dart';
+import 'package:decisionroll/common/textfield_widget.dart';
+import 'package:decisionroll/utilities/colors.dart';
+import 'package:go_router/go_router.dart';
+
+class DecisionPage extends ConsumerWidget {
+  final String decisionId;
+
+  DecisionPage({
+    Key? key,
+    required this.decisionId,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final List<ChartData> chartData = [
-      ChartData('werewolf', 25, 3, const Color.fromRGBO(9, 0, 136, 1)),
-      ChartData('charades', 38, 4, const Color.fromRGBO(147, 0, 119, 1)),
-      ChartData('burrito', 34, 3, const Color.fromRGBO(228, 0, 124, 1)),
-      ChartData('hike', 52, 0, const Color.fromRGBO(255, 189, 57, 1))
-    ];
+  Widget build(BuildContext c, WidgetRef ref) {
+    String goRouterLocation = GoRouter.of(c).location;
+    String location = goRouterLocation;
+
+    String locationUid = location.replaceAll("/decision/", "");
+    print(locationUid);
     return Scaffold(
         backgroundColor: whiteBackgroundColor,
-        appBar: MyAppBar(),
-        drawer: MyDrawer(),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: SizeConfig.screenHeight! * 0.05),
-            const Text("let's roll!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                )),
-            SizedBox(height: SizeConfig.screenHeight! * 0.01),
-            const Text("you have 4 votes remaining",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )),
-            Expanded(
-                child: SfCircularChart(series: <CircularSeries>[
-              // Renders doughnut chart
-              DoughnutSeries<ChartData, String>(
-                  animationDuration: 4500,
-                  animationDelay: 2000,
-                  dataSource: chartData,
-                  dataLabelSettings: const DataLabelSettings(
-                      isVisible: true, textStyle: TextStyle(fontSize: 12)),
-                  dataLabelMapper: (datum, index) {
-                    return '${datum.title}  '
-                        ' \n my votes: ${datum.myVotes} \n total: ${datum.totalVotes}';
-                  },
-                  pointColorMapper: (ChartData data, _) => data.color,
-                  xValueMapper: (ChartData data, _) => data.title,
-                  yValueMapper: (ChartData data, _) => data.totalVotes)
-            ])),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-                // vertical: 8,
+        appBar: AppBar(
+          backgroundColor: whiteBackgroundColor,
+          elevation: 0.0,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          title: Text("Roll $locationUid",
+              style: const TextStyle(
+                color: blueColor,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              )),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 15.0,
+            horizontal: 15,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: SizeConfig.screenHeight(c) * 0.1),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextFieldWidget(
+                        texttFieldController: TextEditingController(),
+                        hintText: "Enter Option One"),
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: blueColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 5,
+                        ),
+                        child: Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 15,
+                              backgroundColor: blueColor04,
+                              child: Icon(FontAwesomeIcons.angleLeft,
+                                  color: Colors.white, size: 13),
+                            ),
+                            SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
+                            const CircleAvatar(
+                                radius: 17,
+                                backgroundColor: whiteBackgroundColor,
+                                child: Text('4',
+                                    style: TextStyle(
+                                      color: blueColor04,
+                                      fontWeight: FontWeight.bold,
+                                    ))),
+                            SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
+                            const CircleAvatar(
+                              radius: 15,
+                              backgroundColor: blueColor04,
+                              child: Icon(FontAwesomeIcons.angleRight,
+                                  color: Colors.white, size: 13),
+                            ),
+                          ],
+                        ),
+                      ))
+                ],
               ),
-              height: SizeConfig.screenHeight! * 0.35,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: 3,
-                itemBuilder: (context, index) => Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: blueColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundColor: blueColor04,
-                            child: Icon(FontAwesomeIcons.minus,
-                                color: Colors.white, size: 15),
-                          ),
-                          SizedBox(width: SizeConfig.screenWidth! * 0.03),
-                          const CircleAvatar(
-                              radius: 17,
-                              backgroundColor: whiteBackgroundColor,
-                              child: Text('4',
-                                  style: TextStyle(
-                                    color: blueColor04,
-                                    fontWeight: FontWeight.bold,
-                                  ))),
-                          SizedBox(width: SizeConfig.screenWidth! * 0.03),
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundColor: blueColor04,
-                            child: Icon(FontAwesomeIcons.plus,
-                                color: Colors.white, size: 15),
-                          ),
-                        ],
-                      ),
-                      const Text('werewolf',
-                          style: TextStyle(
-                            color: whiteBackgroundColor,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          )),
-                      SizedBox(width: SizeConfig.screenWidth! * 0.03),
-                    ],
-                  ),
+              SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
+              Center(
+                child: SizedBox(
+                  width: SizeConfig.screenWidth(c) / 2,
+                  child: InkWell(
+                      onTap: () {},
+                      child: OptionView(
+                        blueColor,
+                        "Open Voting",
+                        padding: 13,
+                      )),
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ));
   }
-}
-
-class ChartData {
-  ChartData(this.title, this.totalVotes, this.myVotes, [this.color]);
-  final String title;
-  final int myVotes;
-  final int totalVotes;
-  final Color? color;
 }
