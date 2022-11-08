@@ -5,7 +5,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// you can add more fields that meet your needs
   final double height;
   final String title;
-  const MyAppBar({this.title = '', this.height = kToolbarHeight, Key? key})
+  final Color color;
+  final Color titlecolor;
+  const MyAppBar(
+      {this.title = '',
+      this.color = whiteBackgroundColor,
+      this.titlecolor = Colors.black,
+      this.height = kToolbarHeight,
+      Key? key})
       : super(key: key);
 
   @override
@@ -14,10 +21,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       // height: preferredSize.height,/
       iconTheme: const IconThemeData(color: blueColor),
-      backgroundColor: whiteBackgroundColor,
+      backgroundColor: color,
       title: Text(title,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: titlecolor,
           )),
       centerTitle: true,
       elevation: 0.0,

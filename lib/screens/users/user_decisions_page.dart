@@ -1,10 +1,9 @@
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
-import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
-import 'package:decisionroll/common/textfield_widget.dart';
 import 'package:decisionroll/providers/decisions/user_decisions_stream_provider.dart';
+import 'package:decisionroll/screens/components/add_new_decision.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +22,13 @@ class UserDecisionsPage extends ConsumerWidget {
     debugPrint("user decisions page: $userId");
     final decisionsAsync = ref.watch(userDecisionsStreamProvider(userId));
     return Scaffold(
-      backgroundColor: whiteBackgroundColor,
-      appBar: const MyAppBar(title: 'My Decisions'),
-      drawer: MyDrawer(),
+      backgroundColor: purpleColor,
+      appBar: const MyAppBar(
+        title: 'My Decisions',
+        titlecolor: Colors.white,
+        color: blueColor05,
+      ),
+      drawer: const MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 8.0,
@@ -34,28 +37,8 @@ class UserDecisionsPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: SizeConfig.screenHeight(c) * 0.1,
-              width: SizeConfig.screenWidth(c),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: TextFieldWidget(
-                        texttFieldController: newDecisionController,
-                        hintText: "Enter your title to create new roll"),
-                  ),
-                  SizedBox(
-                    child: InkWell(
-                        child: OptionView(
-                      blueColor02,
-                      "Create",
-                      padding: 10,
-                    )),
-                  )
-                ],
-              ),
-            ),
+            SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
+            const AddNewDecisionWidget(),
             SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
             decisionsAsync.maybeWhen(
                 orElse: () => const SizedBox(
@@ -72,11 +55,12 @@ class UserDecisionsPage extends ConsumerWidget {
                       // Text(decisionsList[index].title),
                       return InkWell(
                         onTap: () {
-                          GoRouter.of(context).push('/decision/${decision.id}');
+                          GoRouter.of(context)
+                              .push('/decision/${decision.title}');
                         },
                         child: Container(
                             decoration: BoxDecoration(
-                              color: blueColor02,
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             padding: const EdgeInsets.symmetric(
@@ -91,7 +75,7 @@ class UserDecisionsPage extends ConsumerWidget {
                                       text: 'Roll: ',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                           fontSize: 15),
                                       children: <TextSpan>[
                                         TextSpan(
@@ -109,7 +93,7 @@ class UserDecisionsPage extends ConsumerWidget {
                                         text: 'Outcome: ',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             fontSize: 15),
                                         children: <TextSpan>[
                                           TextSpan(
@@ -128,7 +112,7 @@ class UserDecisionsPage extends ConsumerWidget {
                                         text: 'Owner: ',
                                         style: TextStyle(
                                             // fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             fontSize: 13),
                                         children: <TextSpan>[
                                           TextSpan(
@@ -146,7 +130,7 @@ class UserDecisionsPage extends ConsumerWidget {
                                         text: 'Status: ',
                                         style: TextStyle(
                                             // fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             fontSize: 13),
                                         children: <TextSpan>[
                                           TextSpan(
