@@ -22,7 +22,7 @@ class UserDecisionsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     debugPrint("user decisions page: $userId");
-    final decisionsAsync = ref.watch(userDecisionsProvider(userId));
+
     return Scaffold(
       backgroundColor: purpleColor,
       appBar: const MyAppBar(
@@ -31,60 +31,64 @@ class UserDecisionsPage extends ConsumerWidget {
         color: blueColor05,
       ),
       drawer: const MyDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 8.0,
-          horizontal: 15,
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
-          const AddNewDecisionWidget(),
-          SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-          decisionsAsync.maybeWhen(
-            orElse: () => const SizedBox(
-              child: Text("no dataa..."),
-            ),
-            loading: () => const BubbleLoadingWidget(),
-            data: (decisions) {
-              final decisionsList = decisions.toList();
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: decisionsList.length,
-                  itemBuilder: (context, index) {
-                    final decision = decisionsList[index];
-                    // Text(decisionsList[index].title),
-                    return InkWell(
-                        onTap: () {
-                          GoRouter.of(context).push('/decision/${decision.id}');
-                        },
-                        child: Container(
-                            margin: const EdgeInsets.only(top: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 15,
-                            ),
-                            child: Column(children: [
-                              Container(child: boldTextElem(decision.title)),
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: paddedWidgetList([
-                                    (decision.outcome != null)
-                                        ? propText(
-                                            'Outcome: ', decision.outcome)
-                                        : null,
-                                    propText('Owner: ', decision.ownerId),
-                                    propText('State: ', decision.state),
-                                  ]))
-                            ])));
-                  });
-            },
-          )
-        ]),
+      body: _buildBody(c, ref),
+    );
+  }
+
+  Widget _buildBody(BuildContext c, WidgetRef ref) {
+    final decisionsAsync = ref.watch(userDecisionsProvider(userId));
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 15,
       ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
+        const AddNewDecisionWidget(),
+        SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
+        decisionsAsync.maybeWhen(
+          orElse: () => const SizedBox(
+            child: Text("no dataa..."),
+          ),
+          loading: () => const BubbleLoadingWidget(),
+          data: (decisions) {
+            final decisionsList = decisions.toList();
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: decisionsList.length,
+                itemBuilder: (context, index) {
+                  final decision = decisionsList[index];
+                  // Text(decisionsList[index].title),
+                  return InkWell(
+                      onTap: () {
+                        GoRouter.of(context).push('/decision/${decision.id}');
+                      },
+                      child: Container(
+                          margin: const EdgeInsets.only(top: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 15,
+                          ),
+                          child: Column(children: [
+                            Container(child: boldTextElem(decision.title)),
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: paddedWidgetList([
+                                  (decision.outcome != null)
+                                      ? propText('Outcome: ', decision.outcome)
+                                      : null,
+                                  propText('Owner: ', decision.ownerId),
+                                  propText('State: ', decision.state),
+                                ]))
+                          ])));
+                });
+          },
+        )
+      ]),
     );
   }
 
