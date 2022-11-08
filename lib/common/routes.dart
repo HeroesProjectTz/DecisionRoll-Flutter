@@ -1,4 +1,6 @@
 import 'package:decisionroll/main.dart';
+import 'package:decisionroll/models/decisions/decision_model.dart';
+import 'package:decisionroll/providers/decisions/user_decision_details_page.dart';
 import 'package:decisionroll/screens/account/account_page.dart';
 import 'package:decisionroll/screens/authentication/login_page.dart';
 import 'package:decisionroll/screens/authentication/sign_up_page.dart';
@@ -28,6 +30,11 @@ final goRouter = GoRouter(
       path: '/authwrapper',
       builder: (context, state) => const AuthenticationWrapper(),
     ),
+    GoRoute(
+        path: '/decision/:decisionid/details',
+        builder: (BuildContext context, GoRouterState state) =>
+            UserDecisionDetailsPage(
+                decisionModel: state.extra as DecisionModel)),
     GoRoute(
       path: '/decision/:decisionid',
       builder: (context, state) {
