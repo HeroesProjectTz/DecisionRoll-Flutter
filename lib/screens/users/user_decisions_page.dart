@@ -16,7 +16,9 @@ class UserDecisionsPage extends ConsumerWidget {
     Key? key,
     required this.userId,
   }) : super(key: key);
+
   final TextEditingController newDecisionController = TextEditingController();
+
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     debugPrint("user decisions page: $userId");
@@ -34,29 +36,26 @@ class UserDecisionsPage extends ConsumerWidget {
           vertical: 8.0,
           horizontal: 15,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
-            const AddNewDecisionWidget(),
-            SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-            decisionsAsync.maybeWhen(
-                orElse: () => const SizedBox(
-                      child: Text("no dataa..."),
-                    ),
-                loading: () => const BubbleLoadingWidget(),
-                data: (decisions) {
-                  final decisionsList = decisions.toList();
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: decisionsList.length,
-                    itemBuilder: (context, index) {
-                      final decision = decisionsList[index];
-                      // Text(decisionsList[index].title),
-                      return InkWell(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
+          const AddNewDecisionWidget(),
+          SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
+          decisionsAsync.maybeWhen(
+            orElse: () => const SizedBox(
+              child: Text("no dataa..."),
+            ),
+            loading: () => const BubbleLoadingWidget(),
+            data: (decisions) {
+              final decisionsList = decisions.toList();
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: decisionsList.length,
+                  itemBuilder: (context, index) {
+                    final decision = decisionsList[index];
+                    // Text(decisionsList[index].title),
+                    return InkWell(
                         onTap: () {
-                          GoRouter.of(context)
-                              .push('/decision/${decision.title}');
+                          GoRouter.of(context).push('/decision/${decision.id}');
                         },
                         child: Container(
                             decoration: BoxDecoration(
@@ -67,87 +66,53 @@ class UserDecisionsPage extends ConsumerWidget {
                               vertical: 15,
                               horizontal: 15,
                             ),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      text: 'Roll: ',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontSize: 15),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: decision.title,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        // TextSpan(text: ' world!'),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 12.0),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        text: 'Outcome: ',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 15),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text: decisionsList[index].title,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          // TextSpan(text: ' world!'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 12.0),
-                                    child: RichText(
-                                      text: const TextSpan(
-                                        text: 'Owner: ',
-                                        style: TextStyle(
-                                            // fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 13),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: "Eliza",
-                                          ),
-                                          // TextSpan(text: ' world!'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 12.0),
-                                    child: RichText(
-                                      text: const TextSpan(
-                                        text: 'Status: ',
-                                        style: TextStyle(
-                                            // fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 13),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: 'Open',
-                                          ),
-                                          // TextSpan(text: ' world!'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ])),
-                      );
-                    },
-                  );
-                }),
-          ],
-        ),
+                            child: Column(children: [
+                              Container(child: boldTextElem(decision.title)),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: propList([
+                                    propText('Outcome: ', decision.outcome),
+                                    propText('Owner: ', decision.ownerId),
+                                    propText('State: ', decision.state),
+                                  ]))
+                            ])));
+                  });
+            },
+          )
+        ]),
+      ),
+    );
+  }
+
+  static Widget boldTextElem(String text) {
+    return RichText(
+        text: TextSpan(
+            text: text,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 15)));
+  }
+
+  static List<Widget> propList(List<Widget> propertyTexts) {
+    return propertyTexts.map((propertyText) {
+      return Padding(
+          padding: const EdgeInsets.only(top: 12.0), child: propertyText);
+    }).toList();
+  }
+
+  static Widget propText(String name, String value) {
+    return RichText(
+      text: TextSpan(
+        text: name,
+        style: const TextStyle(
+            fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
+        children: <TextSpan>[
+          TextSpan(
+              text: value,
+              style: const TextStyle(fontWeight: FontWeight.normal)),
+          // TextSpan(text: ' world!'),
+        ],
       ),
     );
   }
