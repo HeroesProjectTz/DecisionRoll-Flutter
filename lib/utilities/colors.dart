@@ -8,3 +8,5 @@ const Color blueColor02 = Color.fromRGBO(38, 70, 83, 0.9);
 const Color blueColor03 = Color.fromRGBO(29, 50, 87, 1);
 const Color blueColor04 = Color.fromRGBO(29, 53, 87, 1);
 const Color greyColor = Color.fromRGBO(217, 217, 217, 1);
+const Color purpleColor = Color(0xffd397fe);
+const Color blueColor05 = Color(0xff887fe1);
