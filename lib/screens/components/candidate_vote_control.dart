@@ -36,12 +36,12 @@ class CandidateVoteControl extends ConsumerWidget {
               ),
               decoration: BoxDecoration(border: Border.all(color: color))),
         ),
-        _buildVotingCtrls(c, ref, candidate, color),
+        _buildVotingButtons(c, ref, candidate, color),
       ],
     );
   }
 
-  Widget _buildVotingCtrls(BuildContext c, WidgetRef ref,
+  Widget _buildVotingButtons(BuildContext c, WidgetRef ref,
       DocumentSnapshot<CandidateModel?> candidate, Color color) {
     final decisionId =
         candidate.reference.parent.parent?.id ?? "decision-parent-missing";

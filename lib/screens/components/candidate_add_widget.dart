@@ -1,23 +1,20 @@
 import 'package:decisionroll/utilities/colors.dart';
-
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:decisionroll/models/database/decision_model.dart';
-import 'package:decisionroll/models/database/candidate_model.dart';
-import 'package:decisionroll/common/candidate_colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers/database/database_provider.dart';
+
 class CandidateAddWidget extends ConsumerWidget {
-  final DocumentSnapshot<DecisionModel?> decision;
+  final String decisionId;
 
-  CandidateAddWidget(this.decision) : super(key: Key(decision.id));
-
+  CandidateAddWidget(this.decisionId) : super(key: Key(decisionId));
+  final TextEditingController titleController = TextEditingController();
   Widget build(BuildContext c, WidgetRef ref) {
     return Row(children: [
-      const Expanded(
+      Expanded(
         flex: 3,
         child: TextField(
+          controller: titleController,
           decoration: InputDecoration(
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
@@ -29,6 +26,29 @@ class CandidateAddWidget extends ConsumerWidget {
             hintStyle: TextStyle(
               color: Color(0xff545454),
             ),
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 1,
+        child: InkWell(
+          onTap: () {
+            ref.read(databaseProvider).whenData((db) async {
+              if (db != null) {
+                db.addCandidateByTitle(decisionId, titleController.text);
+              }
+            });
+            debugPrint("Add ${titleController.text}");
+          },
+          child: Container(
+            color: blueColor05,
+            child: Center(
+              child: Text("Add",
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10.5),
           ),
         ),
       ),
