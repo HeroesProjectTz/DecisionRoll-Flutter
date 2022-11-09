@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/providers/database/database_provider.dart';
 
+import '../../providers/database/candidate_vote_provider.dart';
+
 class CandidateVoteControl extends ConsumerWidget {
   final DocumentSnapshot<CandidateModel?> candidate;
 
@@ -15,7 +17,7 @@ class CandidateVoteControl extends ConsumerWidget {
 
   Widget build(BuildContext c, WidgetRef ref) {
     final candidateModel = candidate.data() ?? CandidateModel.blank();
-    final color = CandidateColors.getColorFromIdx(candidateModel.colorIdx);
+    final color = CandidateColors.getColorFromIdx(candidateModel.index);
     return Row(
       children: [
         Expanded(
@@ -39,6 +41,25 @@ class CandidateVoteControl extends ConsumerWidget {
         _buildVotingButtons(c, ref, candidate, color),
       ],
     );
+  }
+
+  Widget _buildYourVoteTextFromWeight(int weight) {
+    return Text(weight.toString(),
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ));
+  }
+
+  Widget _buildYourVoteText(BuildContext c, WidgetRef ref,
+      DocumentSnapshot<CandidateModel?> candidate) {
+    final voteAsync = ref.watch(candidateVoteProvider(candidate));
+    return voteAsync.maybeWhen(
+        orElse: () => _buildYourVoteTextFromWeight(0),
+        loading: () => _buildYourVoteTextFromWeight(0),
+        data: (vote) {
+          return _buildYourVoteTextFromWeight(vote.weight);
+        });
   }
 
   Widget _buildVotingButtons(BuildContext c, WidgetRef ref,
@@ -81,11 +102,7 @@ class CandidateVoteControl extends ConsumerWidget {
                       color: Colors.white, size: 13),
                 ),
               ),
-              Text(candidateModel.weight.toString(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  )),
+              _buildYourVoteText(c, ref, candidate),
               // SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
               InkWell(
                 onTap: () {

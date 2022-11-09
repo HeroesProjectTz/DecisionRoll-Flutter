@@ -6,20 +6,8 @@ class VoteModel {
 
   const VoteModel({this.weight = 0});
 
-  VoteModel? incrementWeight() {
-    if (weight <= 9) {
-      return VoteModel(weight: weight + 1);
-    } else {
-      return null;
-    }
-  }
-
-  VoteModel? decrementWeight() {
-    if (weight >= 1) {
-      return VoteModel(weight: weight - 1);
-    } else {
-      return null;
-    }
+  factory VoteModel.blank() {
+    return const VoteModel(weight: 0);
   }
 
   factory VoteModel.fromSnapshot(
@@ -35,4 +23,20 @@ class VoteModel {
   Map<String, dynamic> toMap() => {
         'weight': weight,
       };
+
+  VoteModel? incrementWeight() {
+    if (weight <= 9) {
+      return VoteModel(weight: weight + 1);
+    } else {
+      return null;
+    }
+  }
+
+  VoteModel? decrementWeight() {
+    if (weight >= 1) {
+      return VoteModel(weight: weight - 1);
+    } else {
+      return null;
+    }
+  }
 }

@@ -26,13 +26,6 @@ class DecisionPage extends ConsumerWidget {
     required this.decisionId,
   }) : super(key: key);
 
-  final List<ChartCandidate> chartData = [
-    ChartCandidate('werewolf', 25, const Color.fromRGBO(9, 0, 136, 1)),
-    ChartCandidate('charades', 38, const Color.fromRGBO(147, 0, 119, 1)),
-    ChartCandidate('burrito', 34, const Color.fromRGBO(228, 0, 124, 1)),
-    ChartCandidate('hike', 52, const Color.fromRGBO(255, 189, 57, 1))
-  ];
-
   MyAppBar _buildAppBarWithTitle(String title) {
     return MyAppBar(
       title: title,
@@ -174,7 +167,7 @@ class DecisionPage extends ConsumerWidget {
       List<DocumentSnapshot<CandidateModel>> candidates) {
     return candidates.map((candidateSnapshot) {
       final candidateModel = candidateSnapshot.data() ?? CandidateModel.blank();
-      final color = CandidateColors.getColorFromIdx(candidateModel.colorIdx);
+      final color = CandidateColors.getColorFromIdx(candidateModel.index);
       return ChartCandidate(candidateModel.title, candidateModel.weight, color);
     }).toList();
   }
@@ -194,30 +187,43 @@ class DecisionPage extends ConsumerWidget {
         orElse: () => const SizedBox(),
         loading: () => const SizedBox(),
         data: (decision) {
-          if (decision.outcome != null) {
-            return _buildStatusTextFromText("Outcome: ${decision.outcome}");
-          } else {
-            final accountAsync = ref.watch(decisionAccountProvider(decisionId));
-            return accountAsync.maybeWhen(
-                orElse: () => const SizedBox(
-                      child: Text("no dataa..."),
-                    ),
-                loading: () => const BubbleLoadingWidget(),
-                data: (account) {
-                  final balance = account.balance;
+          switch (decision.state) {
+            case 'new':
+              return _buildStatusTextFromText("Wait for voting to start.");
+            case 'open':
+              {
+                final accountAsync =
+                    ref.watch(decisionAccountProvider(decisionId));
+                return accountAsync.maybeWhen(
+                    orElse: () => const SizedBox(
+                          child: Text("no dataa..."),
+                        ),
+                    loading: () => const BubbleLoadingWidget(),
+                    data: (account) {
+                      final balance = account.balance;
+                      return _buildStatusTextFromText(
+                          "you have $balance votes remaining");
+                    });
+              }
+            case 'closed':
+              return _buildStatusTextFromText("Voting has closed.");
+            case 'finished':
+              {
+                if (decision.outcome != null) {
                   return _buildStatusTextFromText(
-                      "you have $balance votes remaining");
-                });
+                      "Outcome: ${decision.outcome}");
+                } else {
+                  return _buildStatusTextFromText("<outcome missing>");
+                }
+              }
+            default:
+              return _buildStatusTextFromText("<invalid state>");
           }
         });
   }
 
   Widget _buildCandidateVoteControls(BuildContext c, WidgetRef ref) {
     final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
-    // candidatesAsync.whenData((candidates) {
-    //   final cstr = candidates.map((c) => c.data()?.title).toString();
-    //   debugPrint("candidates: $cstr");
-    // });
 
     return SizedBox(
         // height: SizeConfig.screenHeight(c) * 0.3,

@@ -111,14 +111,20 @@ class FirestoreDatabase {
   }
 
   // Candidate creation
-  Future<DocumentReference<CandidateModel>> addCandidate(
-      String decisionId, CandidateModel candidate) {
-    return decisionCandidatesCollection(decisionId).add(candidate);
-  }
+  Future<void> addCandidateByTitle(String decisionId, String title) async {
+    final decisionRef = getDecision(decisionId);
 
-  Future<DocumentReference<CandidateModel>> addCandidateByTitle(
-      String decisionId, String title) {
-    return addCandidate(decisionId, CandidateModel(title: title));
+    db.runTransaction((transaction) async {
+      // check that the decision is allowing voting
+      final decisionSnapshot = await transaction.get(decisionRef);
+      final decision = decisionSnapshot.data();
+      if (decision != null && decision.ownerId == uid) {
+        final index = decision.nextIndex;
+        final candidate = CandidateModel(title: title, index: index);
+        decisionCandidatesCollection(decisionId).add(candidate);
+        transaction.update(decisionRef, {'nextIndex': FieldValue.increment(1)});
+      }
+    });
   }
 
   // voting
@@ -137,6 +143,7 @@ class FirestoreDatabase {
         final currentAccount = await transaction.get(accountRef);
         final updatedAccountModel =
             (currentAccount.data() ?? const AccountModel()).decrementbalance();
+        // debugPrint("updated account: ${updatedAccountModel?.balance}");
         if (updatedAccountModel != null) {
           // check that the vote.weight hasn't exceeded 10
           // (which it never should because of account balance check, but still)
@@ -170,6 +177,8 @@ class FirestoreDatabase {
         final currentVote = await transaction.get(voteRef);
         final updatedVoteModel =
             (currentVote.data() ?? const VoteModel()).decrementWeight();
+
+        // debugPrint("updated vote: ${updatedVoteModel?.weight}");
         if (updatedVoteModel != null) {
           final currentAccount = await transaction.get(accountRef);
           final updatedAccountModel =
