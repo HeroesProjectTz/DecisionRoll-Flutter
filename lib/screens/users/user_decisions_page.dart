@@ -17,8 +17,6 @@ class UserDecisionsPage extends ConsumerWidget {
     required this.userId,
   }) : super(key: key);
 
-  final TextEditingController newDecisionController = TextEditingController();
-
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     final decisionsAsync = ref.watch(userDecisionsProvider(userId));

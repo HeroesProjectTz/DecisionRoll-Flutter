@@ -1,4 +1,4 @@
-import 'package:decisionroll/providers/database/add_new_decision.dart';
+import 'package:decisionroll/providers/database/add_decision_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
