@@ -32,11 +32,9 @@ class AddNewDecisionWidget extends ConsumerWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              debugPrint("tapped here");
-
               if (titleController.text != '') {
                 ref.read(addDecisionProvider(titleController.text));
-                debugPrint("tapped");
+
                 titleController.clear();
               }
             },

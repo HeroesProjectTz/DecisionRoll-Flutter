@@ -21,7 +21,6 @@ class UserDecisionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    debugPrint("user decisions page: $userId");
     final decisionsAsync = ref.watch(userDecisionsStreamProvider(userId));
     return Scaffold(
       backgroundColor: purpleColor,
