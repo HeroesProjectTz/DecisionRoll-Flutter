@@ -38,7 +38,7 @@ class UserDecisionsPage extends ConsumerWidget {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
-          const AddNewDecisionWidget(),
+          AddNewDecisionWidget(),
           SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
           decisionsAsync.maybeWhen(
             orElse: () => const SizedBox(
