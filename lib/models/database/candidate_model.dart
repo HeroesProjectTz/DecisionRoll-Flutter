@@ -16,6 +16,11 @@ class CandidateModel {
     return CandidateModel(title: title, weight: weight - 1, colorIdx: colorIdx);
   }
 
+  factory CandidateModel.blank() {
+    return const CandidateModel(
+        title: '<missing title>', weight: 0, colorIdx: 8);
+  }
+
   factory CandidateModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final map = snapshot.data() ?? {};

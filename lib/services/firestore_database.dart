@@ -3,6 +3,7 @@ import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:decisionroll/models/database/vote_model.dart';
 import 'package:decisionroll/models/database/account_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class FirestoreDatabase {
   final FirebaseFirestore db;
@@ -170,16 +171,19 @@ class FirestoreDatabase {
         final updatedVoteModel =
             (currentVote.data() ?? const VoteModel()).decrementWeight();
         if (updatedVoteModel != null) {
+          final currentAccount = await transaction.get(accountRef);
+          final updatedAccountModel =
+              (currentAccount.data() ?? const AccountModel())
+                  .incrementbalance();
+          // debugPrint(
+          //     "setting vote: v=${updatedVoteModel.weight}, a=${updatedAccountModel?.balance}");
+
           // decrement vote, decrement candidate
           transaction.set(voteRef, updatedVoteModel);
           transaction
               .update(candidateRef, {'weight': FieldValue.increment(-1)});
           //  increment account only if balance is less than maximum of 10
           // (this should never happen because of vote floor at 0, but still)
-          final currentAccount = await transaction.get(accountRef);
-          final updatedAccountModel =
-              (currentAccount.data() ?? const AccountModel())
-                  .incrementbalance();
           if (updatedAccountModel != null) {
             transaction.set(accountRef, updatedAccountModel);
           }

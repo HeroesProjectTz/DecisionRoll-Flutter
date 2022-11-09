@@ -7,6 +7,11 @@ import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:decisionroll/providers/database/decision_candidates_provider.dart';
+import 'package:decisionroll/common/bubble_loading_widget.dart';
+import 'package:decisionroll/models/database/candidate_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../common/candidate_colors.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
@@ -16,25 +21,17 @@ class DecisionPage extends ConsumerWidget {
     required this.decisionId,
   }) : super(key: key);
 
-  final List<ChartData> chartData = [
-    ChartData('werewolf', 25, 3, const Color.fromRGBO(9, 0, 136, 1)),
-    ChartData('charades', 38, 4, const Color.fromRGBO(147, 0, 119, 1)),
-    ChartData('burrito', 34, 3, const Color.fromRGBO(228, 0, 124, 1)),
-    ChartData('hike', 52, 0, const Color.fromRGBO(255, 189, 57, 1))
+  final List<ChartCandidate> chartData = [
+    ChartCandidate('werewolf', 25, const Color.fromRGBO(9, 0, 136, 1)),
+    ChartCandidate('charades', 38, const Color.fromRGBO(147, 0, 119, 1)),
+    ChartCandidate('burrito', 34, const Color.fromRGBO(228, 0, 124, 1)),
+    ChartCandidate('hike', 52, const Color.fromRGBO(255, 189, 57, 1))
   ];
+
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    debugPrint("decision page: $decisionId");
-    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
-    candidatesAsync.whenData(
-      (candidates) {
-        final cstr = candidates.map((c) => c.data()?.title).toString();
-        debugPrint("candidates: $cstr");
-      },
-    );
-
     return Scaffold(
-        backgroundColor: purpleColor,
+        // backgroundColor: purpleColor,
         appBar: const MyAppBar(
           title: 'Roll',
           titlecolor: Colors.white,
@@ -56,45 +53,9 @@ class DecisionPage extends ConsumerWidget {
                       fontSize: 20,
                     )),
               ),
-              Expanded(
-                  child: SfCircularChart(series: <CircularSeries>[
-                // Renders doughnut chart
-                DoughnutSeries<ChartData, String>(
-                    animationDuration: 0,
-                    animationDelay: 0,
-                    dataSource: chartData,
-                    dataLabelSettings: const DataLabelSettings(
-                        isVisible: true, textStyle: TextStyle(fontSize: 12)),
-                    dataLabelMapper: (datum, index) {
-                      return '${datum.totalVotes}';
-                    },
-                    pointColorMapper: (ChartData data, _) => data.color,
-                    xValueMapper: (ChartData data, _) => data.title,
-                    yValueMapper: (ChartData data, _) => data.totalVotes)
-              ])),
+              _buildCandidatesWheel(c, ref),
               SizedBox(height: SizeConfig.screenHeight(c) * 0.1),
-              Row(
-                children: [
-                  const Expanded(
-                    flex: 3,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(15),
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: "Enter option 1",
-                        hintStyle: TextStyle(
-                          color: Color(0xff545454),
-                        ),
-                      ),
-                    ),
-                  ),
-                  CandidateVoteControl(purpleColor),
-                ],
-              ),
+              _buildCandidateVoteControls(c, ref),
               SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
               Center(
                 child: SizedBox(
@@ -122,12 +83,76 @@ class DecisionPage extends ConsumerWidget {
           ),
         ));
   }
+
+  Widget _buildCandidatesWheel(BuildContext c, WidgetRef ref) {
+    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
+
+    return candidatesAsync.maybeWhen(
+        orElse: () => const SizedBox(
+              child: Text("no dataa..."),
+            ),
+        loading: () => const BubbleLoadingWidget(),
+        data: (candidates) {
+          return Expanded(
+              child: SfCircularChart(series: <CircularSeries>[
+            // Renders doughnut chart
+            DoughnutSeries<ChartCandidate, String>(
+                animationDuration: 0,
+                animationDelay: 0,
+                dataSource: _buildChartCandidateList(candidates),
+                dataLabelSettings: const DataLabelSettings(
+                    isVisible: true, textStyle: TextStyle(fontSize: 12)),
+                dataLabelMapper: (datum, index) {
+                  return '${datum.weight}';
+                },
+                pointColorMapper: (ChartCandidate data, _) => data.color,
+                xValueMapper: (ChartCandidate data, _) => data.title,
+                yValueMapper: (ChartCandidate data, _) => data.weight)
+          ]));
+        });
+  }
+
+  List<ChartCandidate> _buildChartCandidateList(
+      List<DocumentSnapshot<CandidateModel>> candidates) {
+    return candidates.map((candidateSnapshot) {
+      final candidateModel = candidateSnapshot.data() ?? CandidateModel.blank();
+      final color = CandidateColors.getColorFromIdx(candidateModel.colorIdx);
+      return ChartCandidate(candidateModel.title, candidateModel.weight, color);
+    }).toList();
+  }
+
+  Widget _buildCandidateVoteControls(BuildContext c, WidgetRef ref) {
+    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
+    // candidatesAsync.whenData((candidates) {
+    //   final cstr = candidates.map((c) => c.data()?.title).toString();
+    //   debugPrint("candidates: $cstr");
+    // });
+
+    return SizedBox(
+        height: SizeConfig.screenHeight(c) * 0.3,
+        child: candidatesAsync.maybeWhen(
+            orElse: () => const SizedBox(
+                  child: Text("no dataa..."),
+                ),
+            loading: () => const BubbleLoadingWidget(),
+            data: (candidates) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: candidates.length,
+                  itemBuilder: (context, index) {
+                    final candidate = candidates[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: CandidateVoteControl(candidate),
+                    );
+                  });
+            }));
+  }
 }
 
-class ChartData {
-  ChartData(this.title, this.totalVotes, this.myVotes, [this.color]);
+class ChartCandidate {
+  ChartCandidate(this.title, this.weight, this.color);
   final String title;
-  final int myVotes;
-  final int totalVotes;
-  final Color? color;
+  final int weight;
+  final Color color;
 }
