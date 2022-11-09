@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CandidateModel {
   final DocumentSnapshot? snapshot;
   final String? id;
-  final String name;
+  final String title;
   final int weight;
 
   const CandidateModel(
-      {this.snapshot, this.id, required this.name, required this.weight});
+      {this.snapshot, this.id, required this.title, this.weight = 0});
 
   factory CandidateModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -16,11 +16,11 @@ class CandidateModel {
     return CandidateModel(
         snapshot: snapshot,
         id: snapshot.id,
-        name: map['name'] ?? '<missing name>',
+        title: map['title'] ?? '<missing title>',
         weight: map['weight'] ?? 0);
   }
   Map<String, dynamic> toMap() {
-    return {'name': name, 'weight': weight};
+    return {'title': title, 'weight': weight};
   }
 
   String toJson() {

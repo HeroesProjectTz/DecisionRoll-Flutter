@@ -28,7 +28,7 @@ class DecisionPage extends ConsumerWidget {
     final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
     candidatesAsync.whenOrNull(
       data: (candidates) {
-        final cstr = candidates.map((c) => c.name).toString();
+        final cstr = candidates.map((c) => c.title).toString();
         debugPrint("candidates: $cstr");
       },
     );
