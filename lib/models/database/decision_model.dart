@@ -59,7 +59,7 @@ class DecisionModel {
       final candidateModel = candidate.data();
       if (candidateModel != null) {
         runningTotal += candidate.data()?.weight ?? 0;
-        if (roll <= runningTotal) return candidateModel.title;
+        if (roll < runningTotal) return candidateModel.title;
       }
     }
     return "<unexpected data>";
