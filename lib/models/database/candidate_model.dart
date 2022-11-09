@@ -1,24 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../common/candidate_colors.dart';
+
 class CandidateModel {
   final String title;
   final int weight;
-  final int colorIdx;
+  final int index;
 
-  const CandidateModel(
-      {required this.title, this.weight = 0, this.colorIdx = 0});
+  const CandidateModel({required this.title, this.weight = 0, this.index = 0});
 
   CandidateModel incrementWeight() {
-    return CandidateModel(title: title, weight: weight + 1, colorIdx: colorIdx);
+    return CandidateModel(title: title, weight: weight + 1, index: index);
   }
 
   CandidateModel decrementWeight() {
-    return CandidateModel(title: title, weight: weight - 1, colorIdx: colorIdx);
+    return CandidateModel(title: title, weight: weight - 1, index: index);
   }
 
   factory CandidateModel.blank() {
     return const CandidateModel(
-        title: '<missing title>', weight: 0, colorIdx: 8);
+        title: '<missing title>',
+        weight: 0,
+        index: CandidateColors.overflowIndex);
   }
 
   factory CandidateModel.fromSnapshot(
@@ -29,11 +32,11 @@ class CandidateModel {
 
   factory CandidateModel.fromMap(Map<String, dynamic> map) => CandidateModel(
       title: map['title'] ?? '<missing title>',
-      weight: map['weight'],
-      colorIdx: map['colorIdx']);
+      weight: map['weight'] ?? 0,
+      index: map['index'] ?? 0);
 
   Map<String, dynamic> toMap() {
-    return {'title': title, 'weight': weight, 'colorIdx': colorIdx};
+    return {'title': title, 'weight': weight, 'index': index};
   }
 
   String toJson() {

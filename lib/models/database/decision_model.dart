@@ -7,12 +7,14 @@ class DecisionModel {
   final String title;
   final String? outcome;
   final String state;
+  final int nextIndex;
 
   const DecisionModel(
       {required this.ownerId,
       required this.title,
       this.outcome,
-      this.state = 'new'});
+      this.state = 'new',
+      this.nextIndex = 0});
 
   factory DecisionModel.blank() {
     return const DecisionModel(
@@ -41,7 +43,8 @@ class DecisionModel {
         ownerId: ownerId,
         title: title,
         state: nextState(),
-        outcome: _newOutcome(candidates));
+        outcome: _newOutcome(candidates),
+        nextIndex: nextIndex);
   }
 
   String? _newOutcome(List<DocumentSnapshot<CandidateModel>> candidates) {
@@ -78,7 +81,8 @@ class DecisionModel {
         ownerId: map['ownerId'] ?? '<missing ownerId>',
         title: map['title'] ?? '<missing title>',
         outcome: map['outcome'],
-        state: map['state'] ?? 'new');
+        state: map['state'] ?? 'new',
+        nextIndex: map['nextIndex'] ?? 0);
   }
 
   Map<String, dynamic> toMap() {
@@ -87,6 +91,7 @@ class DecisionModel {
       'title': title,
       'outcome': outcome,
       'state': state,
+      'nextIndex': nextIndex
     };
   }
 
