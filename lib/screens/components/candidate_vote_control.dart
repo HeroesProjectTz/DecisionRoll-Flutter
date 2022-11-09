@@ -1,14 +1,53 @@
 import 'package:decisionroll/utilities/colors.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:decisionroll/models/database/candidate_model.dart';
+import 'package:decisionroll/common/candidate_colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:decisionroll/providers/database/database_provider.dart';
 
-class CandidateVoteControl extends StatelessWidget {
-  Color? color;
-  CandidateVoteControl(Color purpleColor, {Key? key, color = purpleColor})
-      : super(key: key);
+class CandidateVoteControl extends ConsumerWidget {
+  final DocumentSnapshot<CandidateModel?> candidate;
 
-  @override
-  Widget build(BuildContext context) {
+  CandidateVoteControl(this.candidate) : super(key: Key(candidate.id));
+
+  Widget build(BuildContext c, WidgetRef ref) {
+    final candidateModel = candidate.data() ?? CandidateModel.blank();
+    final color = CandidateColors.getColorFromIdx(candidateModel.colorIdx);
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 15,
+              ),
+              child: Text(
+                candidateModel.title,
+                style: TextStyle(
+                  color: Color(
+                    0xff545454,
+                  ),
+                  fontSize: 13,
+                ),
+              ),
+              decoration: BoxDecoration(border: Border.all(color: color))),
+        ),
+        _buildVotingCtrls(c, ref, candidate, color),
+      ],
+    );
+  }
+
+  Widget _buildVotingCtrls(BuildContext c, WidgetRef ref,
+      DocumentSnapshot<CandidateModel?> candidate, Color color) {
+    final decisionId =
+        candidate.reference.parent.parent?.id ?? "decision-parent-missing";
+    final candidateId = candidate.id;
+    final candidateModel = candidate.data() ?? CandidateModel.blank();
+
     return Expanded(
       flex: 1,
       child: Container(
@@ -21,7 +60,11 @@ class CandidateVoteControl extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  debugPrint("Decrement");
+                  ref.read(databaseProvider).whenData((db) async {
+                    if (db != null) {
+                      db.decrementVote(decisionId, candidateId);
+                    }
+                  });
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -38,7 +81,7 @@ class CandidateVoteControl extends StatelessWidget {
                       color: Colors.white, size: 13),
                 ),
               ),
-              const Text('0',
+              Text(candidateModel.weight.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -46,7 +89,11 @@ class CandidateVoteControl extends StatelessWidget {
               // SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
               InkWell(
                 onTap: () {
-                  debugPrint("Increment");
+                  ref.read(databaseProvider).whenData((db) async {
+                    if (db != null) {
+                      db.incrementVote(decisionId, candidateId);
+                    }
+                  });
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
