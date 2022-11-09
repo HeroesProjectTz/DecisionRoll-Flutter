@@ -58,19 +58,26 @@ class DecisionPage extends ConsumerWidget {
         drawer: const MyDrawer(),
         body: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: 15.0,
+            vertical: 2.0,
             horizontal: 15,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildCandidatesWheel(c, ref),
-              SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-              Center(child: _buildStatusText(c, ref)),
-              _buildCandidateVoteControls(c, ref),
-              _buildCandidateAddWidget(c, ref),
-              SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-              _buildStateTransitionButton(c, ref),
+              // SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Center(child: _buildStatusText(c, ref)),
+                    _buildCandidateVoteControls(c, ref),
+                    _buildCandidateAddWidget(c, ref),
+                    SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
+                    _buildStateTransitionButton(c, ref),
+                  ],
+                ),
+              )
             ],
           ),
         ));
@@ -141,22 +148,25 @@ class DecisionPage extends ConsumerWidget {
             ),
         loading: () => const BubbleLoadingWidget(),
         data: (candidates) {
-          return Expanded(
+          return Container(
+              constraints: BoxConstraints(
+                  minHeight: SizeConfig.screenHeight(c) * 0.25,
+                  maxHeight: SizeConfig.screenHeight(c) * 0.40),
               child: SfCircularChart(series: <CircularSeries>[
-            // Renders doughnut chart
-            DoughnutSeries<ChartCandidate, String>(
-                animationDuration: 0,
-                animationDelay: 0,
-                dataSource: _buildChartCandidateList(candidates),
-                dataLabelSettings: const DataLabelSettings(
-                    isVisible: true, textStyle: TextStyle(fontSize: 12)),
-                dataLabelMapper: (datum, index) {
-                  return '${datum.weight}';
-                },
-                pointColorMapper: (ChartCandidate data, _) => data.color,
-                xValueMapper: (ChartCandidate data, _) => data.title,
-                yValueMapper: (ChartCandidate data, _) => data.weight)
-          ]));
+                // Renders doughnut chart
+                DoughnutSeries<ChartCandidate, String>(
+                    animationDuration: 0,
+                    animationDelay: 0,
+                    dataSource: _buildChartCandidateList(candidates),
+                    dataLabelSettings: const DataLabelSettings(
+                        isVisible: true, textStyle: TextStyle(fontSize: 12)),
+                    dataLabelMapper: (datum, index) {
+                      return '${datum.weight}';
+                    },
+                    pointColorMapper: (ChartCandidate data, _) => data.color,
+                    xValueMapper: (ChartCandidate data, _) => data.title,
+                    yValueMapper: (ChartCandidate data, _) => data.weight)
+              ]));
         });
   }
 
