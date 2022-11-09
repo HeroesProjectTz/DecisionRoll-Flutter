@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:decisionroll/providers/database/decision_candidates_provider.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
@@ -26,11 +25,15 @@ class DecisionPage extends ConsumerWidget {
   ];
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    String goRouterLocation = GoRouter.of(c).location;
-    String location = goRouterLocation;
+    debugPrint("decision page: $decisionId");
+    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
+    candidatesAsync.whenOrNull(
+      data: (candidates) {
+        final cstr = candidates.map((c) => c.name).toString();
+        debugPrint("candidates: $cstr");
+      },
+    );
 
-    String locationUid = location.replaceAll("/decision/", "");
-    print(locationUid);
     return Scaffold(
         backgroundColor: purpleColor,
         appBar: const MyAppBar(
