@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 class UserDecisionsPage extends ConsumerWidget {
   final String userId;
 
-  UserDecisionsPage({
+  const UserDecisionsPage({
     Key? key,
     required this.userId,
   }) : super(key: key);
@@ -45,13 +45,11 @@ class UserDecisionsPage extends ConsumerWidget {
               ),
               loading: () => const BubbleLoadingWidget(),
               data: (decisions) {
-                final decisionsList = decisions.toList();
                 return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: decisionsList.length,
+                    itemCount: decisions.length,
                     itemBuilder: (context, index) {
-                      final decision = decisionsList[index];
-                      // Text(decisionsList[index].title),
+                      final decision = decisions[index];
                       return InkWell(
                           onTap: () {
                             GoRouter.of(context).go('/decision/${decision.id}');
@@ -66,20 +64,29 @@ class UserDecisionsPage extends ConsumerWidget {
                                 vertical: 15,
                                 horizontal: 15,
                               ),
-                              child: Column(children: [
-                                Container(child: boldTextElem(decision.title)),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: paddedWidgetList([
-                                      (decision.outcome != null)
-                                          ? propText(
-                                              'Outcome: ', decision.outcome)
-                                          : null,
-                                      propText('Owner: ', decision.ownerId),
-                                      propText('State: ', decision.state),
-                                    ]))
-                              ])));
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                          child: boldTextElem(
+                                              decision.data()?.title ??
+                                                  '<missing title>')),
+                                    ),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: paddedWidgetList([
+                                          (decision.data()?.outcome != null)
+                                              ? propText('Outcome: ',
+                                                  decision.data()?.outcome)
+                                              : null,
+                                          // propText('Owner: ',
+                                          //     decision.data()?.ownerId),
+                                          propText('State: ',
+                                              decision.data()?.state),
+                                        ]))
+                                  ])));
                     });
               },
             ),

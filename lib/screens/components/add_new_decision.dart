@@ -1,5 +1,6 @@
-import 'package:decisionroll/providers/database/add_decision_provider.dart';
+import 'package:decisionroll/providers/database/database_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,7 +11,7 @@ class AddNewDecisionWidget extends ConsumerWidget {
 
   final TextEditingController titleController = TextEditingController();
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext c, WidgetRef ref) {
     return Row(
       children: [
         Expanded(
@@ -18,6 +19,8 @@ class AddNewDecisionWidget extends ConsumerWidget {
           child: TextField(
             controller: titleController,
             decoration: const InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
               isDense: true,
               contentPadding: EdgeInsets.all(15),
               fillColor: Colors.white,
@@ -33,14 +36,21 @@ class AddNewDecisionWidget extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               if (titleController.text != '') {
-                ref.read(addDecisionProvider(titleController.text));
-
-                titleController.clear();
+                ref.read(databaseProvider).whenData((db) async {
+                  if (db != null) {
+                    final decision =
+                        await db.addDecisionByTitle(titleController.text);
+                    debugPrint("added Decision ${decision.id}");
+                    goRouter.go('/decision/${decision.id}');
+                  } else {
+                    debugPrint("FirestoreDatabase was null");
+                  }
+                  titleController.clear();
+                });
               }
             },
             child: Container(
-              decoration: BoxDecoration(
-                  color: blueColor05, borderRadius: BorderRadius.circular(8)),
+              decoration: const BoxDecoration(color: blueColor05),
               padding:
                   const EdgeInsets.symmetric(horizontal: 15, vertical: 12.8),
               child: const Center(
