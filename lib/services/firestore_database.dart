@@ -13,14 +13,16 @@ class FirestoreDatabase {
 
   // ==== type-safe collection access helpers ====
   CollectionReference<DecisionModel> decisionsCollection() =>
-      db.collection(FirestorePath.decisions).withConverter<DecisionModel>(
+      db.collection('decisions').withConverter<DecisionModel>(
           fromFirestore: (snapshot, _) => DecisionModel.fromSnapshot(snapshot),
           toFirestore: (decision, _) => decision.toMap());
 
   CollectionReference<CandidateModel> decisionCandidatesCollection(
           String decisionId) =>
       db
-          .collection(FirestorePath.candidates(decisionId))
+          .collection('decisions')
+          .doc(decisionId)
+          .collection('candidates')
           .withConverter<CandidateModel>(
               fromFirestore: (snapshot, _) =>
                   CandidateModel.fromSnapshot(snapshot),
