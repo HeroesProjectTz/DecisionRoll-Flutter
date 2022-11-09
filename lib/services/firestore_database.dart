@@ -3,6 +3,7 @@ import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:decisionroll/services/firestore_path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FirestoreDatabase {
   final FirebaseFirestore db;
@@ -42,7 +43,11 @@ class FirestoreDatabase {
   }
 
   // ==== database update operations ====
-  Future<void> addDecision(DecisionModel decision) {
+  Future<DocumentReference<DecisionModel>> addDecision(DecisionModel decision) {
     return decisionsCollection().add(decision);
+  }
+
+  Future<DocumentReference<DecisionModel>> addDecisionByTitle(String title) {
+    return addDecision(DecisionModel(ownerId: uid, title: title));
   }
 }

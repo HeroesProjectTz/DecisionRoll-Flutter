@@ -2,6 +2,7 @@ import 'package:decisionroll/providers/database/add_decision_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AddNewDecisionWidget extends ConsumerWidget {
   AddNewDecisionWidget({
@@ -35,9 +36,15 @@ class AddNewDecisionWidget extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               if (titleController.text != '') {
-                ref.read(addDecisionProvider(titleController.text));
-
-                titleController.clear();
+                ref.read(addDecisionProvider(titleController.text)).when(
+                      data: (decision) {
+                        titleController.clear();
+                        // goRouter.go('/decision/${decision.id}');
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (e, st) => Center(child: Text(e.toString())),
+                    );
               }
             },
             child: Container(
