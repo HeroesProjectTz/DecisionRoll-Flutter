@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
-import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,14 +60,13 @@ class DecisionPage extends ConsumerWidget {
                   child: SfCircularChart(series: <CircularSeries>[
                 // Renders doughnut chart
                 DoughnutSeries<ChartData, String>(
-                    animationDuration: 4500,
-                    animationDelay: 2000,
+                    animationDuration: 0,
+                    animationDelay: 0,
                     dataSource: chartData,
                     dataLabelSettings: const DataLabelSettings(
                         isVisible: true, textStyle: TextStyle(fontSize: 12)),
                     dataLabelMapper: (datum, index) {
-                      return '${datum.title}  '
-                          ' \n my votes: ${datum.myVotes} \n total: ${datum.totalVotes}';
+                      return '${datum.totalVotes}';
                     },
                     pointColorMapper: (ChartData data, _) => data.color,
                     xValueMapper: (ChartData data, _) => data.title,
@@ -78,9 +76,11 @@ class DecisionPage extends ConsumerWidget {
               Row(
                 children: [
                   const Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: TextField(
                       decoration: InputDecoration(
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.all(15),
                         fillColor: Colors.white,
@@ -95,41 +95,25 @@ class DecisionPage extends ConsumerWidget {
                   Expanded(
                     flex: 1,
                     child: Container(
-                        decoration: BoxDecoration(
-                            color: blueColor05,
-                            borderRadius: BorderRadius.circular(8)),
+                        decoration: const BoxDecoration(
+                          color: purpleColor02,
+                        ),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 7),
+                            horizontal: 15, vertical: 10.5),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: const [
-                            Expanded(
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundColor: blueColor04,
-                                child: Icon(FontAwesomeIcons.angleLeft,
-                                    color: Colors.white, size: 13),
-                              ),
-                            ),
+                            Icon(FontAwesomeIcons.angleLeft,
+                                color: Colors.white, size: 13),
                             // SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
-                            Expanded(
-                              child: CircleAvatar(
-                                  radius: 17,
-                                  backgroundColor: whiteBackgroundColor,
-                                  child: Text('0',
-                                      style: TextStyle(
-                                        color: blueColor04,
-                                        fontWeight: FontWeight.bold,
-                                      ))),
-                            ),
+                            Text('0',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                )),
                             // SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
-                            Expanded(
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundColor: blueColor04,
-                                child: Icon(FontAwesomeIcons.angleRight,
-                                    color: Colors.white, size: 13),
-                              ),
-                            ),
+                            Icon(FontAwesomeIcons.angleRight,
+                                color: Colors.white, size: 13),
                           ],
                         )),
                   ),
@@ -140,12 +124,22 @@ class DecisionPage extends ConsumerWidget {
                 child: SizedBox(
                   width: SizeConfig.screenWidth(c) / 1.6,
                   child: InkWell(
-                      onTap: () {},
-                      child: OptionView(
-                        blueColor05,
-                        "Open Voting",
-                        padding: 13,
-                      )),
+                    onTap: () {},
+                    child: Container(
+                      decoration: const BoxDecoration(color: blueColor05),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 12.8),
+                      child: const Center(
+                        child: Text(
+                          "Open Voting",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

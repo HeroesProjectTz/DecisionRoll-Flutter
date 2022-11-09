@@ -18,6 +18,8 @@ class AddNewDecisionWidget extends ConsumerWidget {
           child: TextField(
             controller: titleController,
             decoration: const InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
               isDense: true,
               contentPadding: EdgeInsets.all(15),
               fillColor: Colors.white,
@@ -39,8 +41,7 @@ class AddNewDecisionWidget extends ConsumerWidget {
               }
             },
             child: Container(
-              decoration: BoxDecoration(
-                  color: blueColor05, borderRadius: BorderRadius.circular(8)),
+              decoration: const BoxDecoration(color: blueColor05),
               padding:
                   const EdgeInsets.symmetric(horizontal: 15, vertical: 12.8),
               child: const Center(
