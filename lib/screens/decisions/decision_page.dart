@@ -1,12 +1,11 @@
+import 'package:decisionroll/screens/components/candidate_vote_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:decisionroll/providers/database/decision_candidates_provider.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
@@ -24,14 +23,14 @@ class DecisionPage extends ConsumerWidget {
   ];
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    debugPrint("decision page: $decisionId");
-    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
-    candidatesAsync.whenOrNull(
-      data: (candidates) {
-        final cstr = candidates.map((c) => c.data()?.title).toString();
-        debugPrint("candidates: $cstr");
-      },
-    );
+    // debugPrint("decision page: $decisionId");
+    // final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
+    // candidatesAsync.whenOrNull(
+    //   data: (candidates) {
+    //     final cstr = candidates.map((c) => c.data()?.title).toString();
+    //     debugPrint("candidates: $cstr");
+    //   },
+    // );
 
     return Scaffold(
         backgroundColor: purpleColor,
@@ -76,7 +75,7 @@ class DecisionPage extends ConsumerWidget {
               Row(
                 children: [
                   const Expanded(
-                    flex: 4,
+                    flex: 3,
                     child: TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -92,31 +91,7 @@ class DecisionPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                        decoration: const BoxDecoration(
-                          color: purpleColor02,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10.5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: const [
-                            Icon(FontAwesomeIcons.angleLeft,
-                                color: Colors.white, size: 13),
-                            // SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
-                            Text('0',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            // SizedBox(width: SizeConfig.screenWidth(c) * 0.01),
-                            Icon(FontAwesomeIcons.angleRight,
-                                color: Colors.white, size: 13),
-                          ],
-                        )),
-                  ),
+                  CandidateVoteControl(purpleColor),
                 ],
               ),
               SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
