@@ -1,21 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DecisionModel {
-  final DocumentSnapshot snapshot;
-  final String id;
+  final DocumentSnapshot? snapshot;
+  final String? id;
   final String ownerId;
   final String title;
   final String? outcome;
   final String state;
 
-  const DecisionModel({
-    required this.snapshot,
-    required this.id,
-    required this.ownerId,
-    required this.title,
-    required this.outcome,
-    required this.state,
-  });
+  const DecisionModel(
+      {this.snapshot,
+      this.id,
+      required this.ownerId,
+      required this.title,
+      this.outcome,
+      this.state = 'new'});
 
   factory DecisionModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {

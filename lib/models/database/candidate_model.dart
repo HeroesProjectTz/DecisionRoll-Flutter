@@ -1,16 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CandidateModel {
-  final DocumentSnapshot snapshot;
-  final String id;
+  final DocumentSnapshot? snapshot;
+  final String? id;
   final String name;
   final int weight;
 
   const CandidateModel(
-      {required this.snapshot,
-      required this.id,
-      required this.name,
-      required this.weight});
+      {this.snapshot, this.id, required this.name, required this.weight});
 
   factory CandidateModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {

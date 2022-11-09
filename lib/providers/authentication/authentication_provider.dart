@@ -7,7 +7,8 @@ final authenticationProvider = Provider<Authentication>((ref) {
   return Authentication();
 });
 
-// Stream Authentication State once from authenticationProvider
-final authStateProvider = StreamProvider<User?>((ref) {
-  return ref.read(authenticationProvider).authStateChange;
-});
+final firebaseAuthProvider =
+    Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
+
+final authStateChangesProvider = StreamProvider<User?>(
+    (ref) => ref.watch(firebaseAuthProvider).authStateChanges());
