@@ -11,7 +11,7 @@ class AddNewDecisionWidget extends ConsumerWidget {
 
   final TextEditingController titleController = TextEditingController();
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext c, WidgetRef ref) {
     return Row(
       children: [
         Expanded(
@@ -36,15 +36,16 @@ class AddNewDecisionWidget extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               if (titleController.text != '') {
-                ref.read(addDecisionProvider(titleController.text)).when(
-                      data: (decision) {
-                        titleController.clear();
-                        // goRouter.go('/decision/${decision.id}');
-                      },
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (e, st) => Center(child: Text(e.toString())),
-                    );
+                ref.read(addDecisionProvider(titleController.text)).whenData(
+                  (decision) {
+                    // TODO this is failing to be called for some reason
+                    debugPrint("decision returned to view: ${decision?.id}");
+                    titleController.clear();
+                    if (decision != null) {
+                      GoRouter.of(c).go('/decision/${decision.id}');
+                    }
+                  },
+                );
               }
             },
             child: Container(
