@@ -5,20 +5,8 @@ class AccountModel {
 
   const AccountModel({this.balance = 10});
 
-  AccountModel? incrementbalance() {
-    if (balance <= 9) {
-      return AccountModel(balance: balance + 1);
-    } else {
-      return null;
-    }
-  }
-
-  AccountModel? decrementbalance() {
-    if (balance >= 1) {
-      return AccountModel(balance: balance - 1);
-    } else {
-      return null;
-    }
+  factory AccountModel.blank() {
+    return const AccountModel();
   }
 
   factory AccountModel.fromSnapshot(
@@ -34,4 +22,20 @@ class AccountModel {
   Map<String, dynamic> toMap() => {
         'balance': balance,
       };
+
+  AccountModel? incrementbalance() {
+    if (balance <= 9) {
+      return AccountModel(balance: balance + 1);
+    } else {
+      return null;
+    }
+  }
+
+  AccountModel? decrementbalance() {
+    if (balance >= 1) {
+      return AccountModel(balance: balance - 1);
+    } else {
+      return null;
+    }
+  }
 }

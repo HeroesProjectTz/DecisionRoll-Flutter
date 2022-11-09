@@ -175,8 +175,6 @@ class FirestoreDatabase {
           final updatedAccountModel =
               (currentAccount.data() ?? const AccountModel())
                   .incrementbalance();
-          // debugPrint(
-          //     "setting vote: v=${updatedVoteModel.weight}, a=${updatedAccountModel?.balance}");
 
           // decrement vote, decrement candidate
           transaction.set(voteRef, updatedVoteModel);

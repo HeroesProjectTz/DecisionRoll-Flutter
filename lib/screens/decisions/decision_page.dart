@@ -12,6 +12,9 @@ import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../common/candidate_colors.dart';
+import '../../providers/database/decision_account_provider.dart';
+import '../../providers/database/decision_provider.dart';
+import '../components/candidate_add_widget.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
@@ -28,15 +31,28 @@ class DecisionPage extends ConsumerWidget {
     ChartCandidate('hike', 52, const Color.fromRGBO(255, 189, 57, 1))
   ];
 
+  MyAppBar _buildAppBarWithTitle(String title) {
+    return MyAppBar(
+      title: title,
+      titlecolor: Colors.white,
+      color: blueColor05,
+    );
+  }
+
+  MyAppBar _buildAppBar(BuildContext c, WidgetRef ref) {
+    final decisionAsync = ref.watch(decisionProvider(decisionId));
+
+    return decisionAsync.maybeWhen(
+        orElse: () => _buildAppBarWithTitle("Let's Roll"),
+        loading: () => _buildAppBarWithTitle("Let's Roll"),
+        data: (decision) => _buildAppBarWithTitle(decision.title));
+  }
+
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     return Scaffold(
         // backgroundColor: purpleColor,
-        appBar: const MyAppBar(
-          title: 'Roll',
-          titlecolor: Colors.white,
-          color: blueColor05,
-        ),
+        appBar: _buildAppBar(c, ref),
         drawer: const MyDrawer(),
         body: Padding(
           padding: const EdgeInsets.symmetric(
@@ -46,16 +62,11 @@ class DecisionPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(
-                child: Text("you have 4 votes remaining",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
-              ),
               _buildCandidatesWheel(c, ref),
-              SizedBox(height: SizeConfig.screenHeight(c) * 0.1),
+              SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
+              Center(child: _buildStatusText(c, ref)),
               _buildCandidateVoteControls(c, ref),
+              _buildCandidateAddWidget(c, ref),
               SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
               Center(
                 child: SizedBox(
@@ -121,6 +132,23 @@ class DecisionPage extends ConsumerWidget {
     }).toList();
   }
 
+  Widget _buildStatusText(BuildContext c, WidgetRef ref) {
+    final accountAsync = ref.watch(decisionAccountProvider(decisionId));
+    return accountAsync.maybeWhen(
+        orElse: () => const SizedBox(
+              child: Text("no dataa..."),
+            ),
+        loading: () => const BubbleLoadingWidget(),
+        data: (account) {
+          final balance = account.balance;
+          return Text("you have $balance votes remaining",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ));
+        });
+  }
+
   Widget _buildCandidateVoteControls(BuildContext c, WidgetRef ref) {
     final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
     // candidatesAsync.whenData((candidates) {
@@ -129,7 +157,7 @@ class DecisionPage extends ConsumerWidget {
     // });
 
     return SizedBox(
-        height: SizeConfig.screenHeight(c) * 0.3,
+        // height: SizeConfig.screenHeight(c) * 0.3,
         child: candidatesAsync.maybeWhen(
             orElse: () => const SizedBox(
                   child: Text("no dataa..."),
@@ -147,6 +175,15 @@ class DecisionPage extends ConsumerWidget {
                     );
                   });
             }));
+  }
+
+  Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
+    // TODO conditionally include CandidateAddWidget
+    // return const SizedBox();
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: CandidateAddWidget(decisionId),
+    );
   }
 }
 

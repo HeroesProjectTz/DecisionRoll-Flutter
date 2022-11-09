@@ -14,6 +14,11 @@ class DecisionModel {
       this.outcome,
       this.state = 'new'});
 
+  factory DecisionModel.blank() {
+    return const DecisionModel(
+        ownerId: "<missing owner>", title: '<missing title>');
+  }
+
   String nextState() {
     switch (state) {
       case 'new':
