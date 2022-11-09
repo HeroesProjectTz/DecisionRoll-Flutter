@@ -37,21 +37,19 @@ class FirestoreDatabase {
               toFirestore: (vote, _) => vote.toMap());
 
   // ==== queries ====
-  Stream<List<DecisionModel>> userDecisions(String ownerId) {
+  Stream<List<DocumentSnapshot<DecisionModel>>> userDecisions(String ownerId) {
     final decisionsQuery =
         decisionsCollection().where('ownerId', isEqualTo: ownerId);
-    final userDecisionsList = decisionsQuery
-        .snapshots()
-        .map((_) => _.docs.map((_) => _.data()).toList());
+    final userDecisionsList = decisionsQuery.snapshots().map((_) => _.docs);
     return userDecisionsList;
   }
 
-  Stream<List<CandidateModel>> decisionCandidates(String decisionId) {
+  Stream<List<DocumentSnapshot<CandidateModel>>> decisionCandidates(
+      String decisionId) {
     final candidatesCollection = decisionCandidatesCollection(decisionId);
 
-    final candidatesListStream = candidatesCollection
-        .snapshots()
-        .map((_) => _.docs.map((_) => _.data()).toList());
+    final candidatesListStream =
+        candidatesCollection.snapshots().map((_) => _.docs);
 
     return candidatesListStream;
   }
