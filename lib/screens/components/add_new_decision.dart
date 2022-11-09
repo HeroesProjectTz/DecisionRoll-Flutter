@@ -1,8 +1,8 @@
-import 'package:decisionroll/providers/database/add_decision_provider.dart';
+import 'package:decisionroll/providers/database/database_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class AddNewDecisionWidget extends ConsumerWidget {
   AddNewDecisionWidget({
@@ -36,16 +36,17 @@ class AddNewDecisionWidget extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               if (titleController.text != '') {
-                ref.read(addDecisionProvider(titleController.text)).whenData(
-                  (decision) {
-                    // TODO this is failing to be called for some reason
-                    debugPrint("decision returned to view: ${decision?.id}");
-                    titleController.clear();
-                    if (decision != null) {
-                      GoRouter.of(c).go('/decision/${decision.id}');
-                    }
-                  },
-                );
+                ref.read(databaseProvider).whenData((db) async {
+                  if (db != null) {
+                    final decision =
+                        await db.addDecisionByTitle(titleController.text);
+                    debugPrint("added Decision ${decision.id}");
+                    goRouter.go('/decision/${decision.id}');
+                  } else {
+                    debugPrint("FirestoreDatabase was null");
+                  }
+                  titleController.clear();
+                });
               }
             },
             child: Container(
