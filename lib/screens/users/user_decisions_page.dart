@@ -57,8 +57,7 @@ class UserDecisionsPage extends ConsumerWidget {
                       // Text(decisionsList[index].title),
                       return InkWell(
                           onTap: () {
-                            GoRouter.of(context)
-                                .push('/decision/${decision.id}');
+                            GoRouter.of(context).go('/decision/${decision.id}');
                           },
                           child: Container(
                               margin: const EdgeInsets.only(top: 12),
