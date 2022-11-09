@@ -8,6 +8,14 @@ class CandidateModel {
   const CandidateModel(
       {required this.title, this.weight = 0, this.colorIdx = 0});
 
+  CandidateModel incrementWeight() {
+    return CandidateModel(title: title, weight: weight + 1, colorIdx: colorIdx);
+  }
+
+  CandidateModel decrementWeight() {
+    return CandidateModel(title: title, weight: weight - 1, colorIdx: colorIdx);
+  }
+
   factory CandidateModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final map = snapshot.data() ?? {};
