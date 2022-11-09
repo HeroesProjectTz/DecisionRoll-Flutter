@@ -6,6 +6,7 @@ import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:decisionroll/providers/database/decision_candidates_provider.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
@@ -23,14 +24,14 @@ class DecisionPage extends ConsumerWidget {
   ];
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    // debugPrint("decision page: $decisionId");
-    // final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
-    // candidatesAsync.whenOrNull(
-    //   data: (candidates) {
-    //     final cstr = candidates.map((c) => c.data()?.title).toString();
-    //     debugPrint("candidates: $cstr");
-    //   },
-    // );
+    debugPrint("decision page: $decisionId");
+    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
+    candidatesAsync.whenData(
+      (candidates) {
+        final cstr = candidates.map((c) => c.data()?.title).toString();
+        debugPrint("candidates: $cstr");
+      },
+    );
 
     return Scaffold(
         backgroundColor: purpleColor,
