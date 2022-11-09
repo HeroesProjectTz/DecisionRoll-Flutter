@@ -17,6 +17,15 @@ class FirestoreDatabase {
           fromFirestore: (snapshot, _) => DecisionModel.fromSnapshot(snapshot),
           toFirestore: (decision, _) => decision.toMap());
 
+  CollectionReference<CandidateModel> decisionCandidatesCollection(
+          String decisionId) =>
+      db
+          .collection(FirestorePath.candidates(decisionId))
+          .withConverter<CandidateModel>(
+              fromFirestore: (snapshot, _) =>
+                  CandidateModel.fromSnapshot(snapshot),
+              toFirestore: (candidate, _) => candidate.toMap());
+
   // ==== queries ====
   Stream<List<DecisionModel>> userDecisions(String ownerId) {
     final decisionsQuery =
@@ -28,18 +37,18 @@ class FirestoreDatabase {
   }
 
   Stream<List<CandidateModel>> decisionCandidates(String decisionId) {
-    final candidatesCollection = db
-        .collection(FirestorePath.candidates(decisionId))
-        .withConverter<CandidateModel>(
-            fromFirestore: (snapshot, _) =>
-                CandidateModel.fromSnapshot(snapshot),
-            toFirestore: (candidate, _) => candidate.toMap());
+    final candidatesCollection = decisionCandidatesCollection(decisionId);
 
     final candidatesListStream = candidatesCollection
         .snapshots()
         .map((_) => _.docs.map((_) => _.data()).toList());
 
     return candidatesListStream;
+  }
+
+  // ==== databes get operations ====
+  DocumentReference<DecisionModel> getDecision(String decisionId) {
+    return decisionsCollection().doc(decisionId);
   }
 
   // ==== database update operations ====
@@ -49,5 +58,15 @@ class FirestoreDatabase {
 
   Future<DocumentReference<DecisionModel>> addDecisionByTitle(String title) {
     return addDecision(DecisionModel(ownerId: uid, title: title));
+  }
+
+  Future<DocumentReference<CandidateModel>> addCandidate(
+      String decisionId, CandidateModel candidate) {
+    return decisionCandidatesCollection(decisionId).add(candidate);
+  }
+
+  Future<DocumentReference<CandidateModel>> addCandidateByTitle(
+      String decisionId, String title) {
+    return addCandidate(decisionId, CandidateModel(title: title));
   }
 }
