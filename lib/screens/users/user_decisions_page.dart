@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 class UserDecisionsPage extends ConsumerWidget {
   final String userId;
 
-  UserDecisionsPage({
+  const UserDecisionsPage({
     Key? key,
     required this.userId,
   }) : super(key: key);
@@ -66,20 +66,25 @@ class UserDecisionsPage extends ConsumerWidget {
                                 vertical: 15,
                                 horizontal: 15,
                               ),
-                              child: Column(children: [
-                                Container(child: boldTextElem(decision.title)),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: paddedWidgetList([
-                                      (decision.outcome != null)
-                                          ? propText(
-                                              'Outcome: ', decision.outcome)
-                                          : null,
-                                      propText('Owner: ', decision.ownerId),
-                                      propText('State: ', decision.state),
-                                    ]))
-                              ])));
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                          child: boldTextElem(decision.title)),
+                                    ),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: paddedWidgetList([
+                                          (decision.outcome != null)
+                                              ? propText(
+                                                  'Outcome: ', decision.outcome)
+                                              : null,
+                                          propText('Owner: ', decision.ownerId),
+                                          propText('State: ', decision.state),
+                                        ]))
+                                  ])));
                     });
               },
             ),
