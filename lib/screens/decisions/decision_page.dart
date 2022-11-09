@@ -12,6 +12,8 @@ import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../common/candidate_colors.dart';
+import '../../models/database/decision_model.dart';
+import '../../providers/database/database_provider.dart';
 import '../../providers/database/decision_account_provider.dart';
 import '../../providers/database/decision_provider.dart';
 import '../components/candidate_add_widget.dart';
@@ -68,31 +70,66 @@ class DecisionPage extends ConsumerWidget {
               _buildCandidateVoteControls(c, ref),
               _buildCandidateAddWidget(c, ref),
               SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-              Center(
-                child: SizedBox(
-                  width: SizeConfig.screenWidth(c) / 1.6,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: const BoxDecoration(color: blueColor05),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 12.8),
-                      child: const Center(
-                        child: Text(
-                          "Open Voting",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              _buildStateTransitionButton(c, ref),
             ],
           ),
         ));
+  }
+
+  String _buttonTextFromState(String state) {
+    switch (state) {
+      case 'new':
+        return 'Open Voting';
+      case 'open':
+        return 'Close Voting';
+      case 'closed':
+        return "Let's Roll!";
+      case 'finished':
+        return "Re-open Voting";
+      default:
+        return "Close Voting";
+    }
+  }
+
+  Widget _buildStateTransitionButtonFromDecision(
+      BuildContext c, WidgetRef ref, DecisionModel decision) {
+    return Center(
+      child: SizedBox(
+        width: SizeConfig.screenWidth(c) / 1.6,
+        child: InkWell(
+          onTap: () {
+            ref.read(databaseProvider).whenData((db) async {
+              if (db != null) {
+                db.advanceDecisionState(decisionId);
+              }
+            });
+          },
+          child: Container(
+            decoration: const BoxDecoration(color: blueColor05),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12.8),
+            child: Center(
+              child: Text(
+                _buttonTextFromState(decision.state),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStateTransitionButton(BuildContext c, WidgetRef ref) {
+    final decisionAsync = ref.watch(decisionProvider(decisionId));
+
+    return decisionAsync.maybeWhen(
+        orElse: () => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (decision) =>
+            _buildStateTransitionButtonFromDecision(c, ref, decision));
   }
 
   Widget _buildCandidatesWheel(BuildContext c, WidgetRef ref) {
@@ -132,20 +169,36 @@ class DecisionPage extends ConsumerWidget {
     }).toList();
   }
 
+  Widget _buildStatusTextFromText(String text) {
+    return Text(text,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ));
+  }
+
   Widget _buildStatusText(BuildContext c, WidgetRef ref) {
-    final accountAsync = ref.watch(decisionAccountProvider(decisionId));
-    return accountAsync.maybeWhen(
-        orElse: () => const SizedBox(
-              child: Text("no dataa..."),
-            ),
-        loading: () => const BubbleLoadingWidget(),
-        data: (account) {
-          final balance = account.balance;
-          return Text("you have $balance votes remaining",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ));
+    final decisionAsync = ref.watch(decisionProvider(decisionId));
+
+    return decisionAsync.maybeWhen(
+        orElse: () => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (decision) {
+          if (decision.outcome != null) {
+            return _buildStatusTextFromText("Outcome: ${decision.outcome}");
+          } else {
+            final accountAsync = ref.watch(decisionAccountProvider(decisionId));
+            return accountAsync.maybeWhen(
+                orElse: () => const SizedBox(
+                      child: Text("no dataa..."),
+                    ),
+                loading: () => const BubbleLoadingWidget(),
+                data: (account) {
+                  final balance = account.balance;
+                  return _buildStatusTextFromText(
+                      "you have $balance votes remaining");
+                });
+          }
         });
   }
 
