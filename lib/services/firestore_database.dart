@@ -1,9 +1,8 @@
 import 'package:decisionroll/models/database/decision_model.dart';
 import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:decisionroll/models/database/vote_model.dart';
+import 'package:decisionroll/models/database/account_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FirestoreDatabase {
   final FirebaseFirestore db;
@@ -25,6 +24,16 @@ class FirestoreDatabase {
           .withConverter<CandidateModel>(
               fromFirestore: (snapshot, _) =>
                   CandidateModel.fromSnapshot(snapshot),
+              toFirestore: (candidate, _) => candidate.toMap());
+
+  CollectionReference<AccountModel> decisionAccountsCollection(
+          String decisionId) =>
+      decisionsCollection()
+          .doc(decisionId)
+          .collection('accounts')
+          .withConverter<AccountModel>(
+              fromFirestore: (snapshot, _) =>
+                  AccountModel.fromSnapshot(snapshot),
               toFirestore: (candidate, _) => candidate.toMap());
 
   CollectionReference<VoteModel> candidateVotesCollection(
@@ -59,12 +68,22 @@ class FirestoreDatabase {
     return decisionsCollection().doc(decisionId);
   }
 
+  DocumentReference<CandidateModel> getCandidateForDecision(
+      String decisionId, String candidateId) {
+    return decisionCandidatesCollection(decisionId).doc(candidateId);
+  }
+
+  DocumentReference<AccountModel> getMyAccountForDecision(String decisionId) {
+    return decisionAccountsCollection(decisionId).doc(uid);
+  }
+
   DocumentReference<VoteModel> getMyVoteForCandidate(
       String decisionId, String candidateId) {
     return candidateVotesCollection(decisionId, candidateId).doc(uid);
   }
 
   // ==== database update operations ====
+  // Decision creation
   Future<DocumentReference<DecisionModel>> addDecision(DecisionModel decision) {
     return decisionsCollection().add(decision);
   }
@@ -73,6 +92,24 @@ class FirestoreDatabase {
     return addDecision(DecisionModel(ownerId: uid, title: title));
   }
 
+  // Decision state advance
+  Future<void> advanceDecisionState(String decisionId) async {
+    final decisionRef = getDecision(decisionId);
+
+    db.runTransaction((transaction) async {
+      final decisionSnapshot = await transaction.get(decisionRef);
+      final decision = decisionSnapshot.data();
+      if (decision != null) {
+        final candidatesSnapshot =
+            await decisionCandidatesCollection(decisionId).snapshots().first;
+        final candidatesList = candidatesSnapshot.docs;
+        final newDecision = decision.advanceState(candidatesList);
+        transaction.set(decisionRef, newDecision);
+      }
+    });
+  }
+
+  // Candidate creation
   Future<DocumentReference<CandidateModel>> addCandidate(
       String decisionId, CandidateModel candidate) {
     return decisionCandidatesCollection(decisionId).add(candidate);
@@ -81,5 +118,73 @@ class FirestoreDatabase {
   Future<DocumentReference<CandidateModel>> addCandidateByTitle(
       String decisionId, String title) {
     return addCandidate(decisionId, CandidateModel(title: title));
+  }
+
+  // voting
+  Future<void> incrementVote(String decisionId, String candidateId) async {
+    final decisionRef = getDecision(decisionId);
+    final voteRef = getMyVoteForCandidate(decisionId, candidateId);
+    final accountRef = getMyAccountForDecision(decisionId);
+    final candidateRef = getCandidateForDecision(decisionId, candidateId);
+
+    db.runTransaction((transaction) async {
+      // check that the decision is allowing voting
+      final decisionSnapshot = await transaction.get(decisionRef);
+      final decision = decisionSnapshot.data();
+      if (decision != null && decision.state == 'open') {
+        // check that the current user has enough account balance to pay for the vote
+        final currentAccount = await transaction.get(accountRef);
+        final updatedAccountModel =
+            (currentAccount.data() ?? const AccountModel()).decrementbalance();
+        if (updatedAccountModel != null) {
+          // check that the vote.weight hasn't exceeded 10
+          // (which it never should because of account balance check, but still)
+          final currentVote = await transaction.get(voteRef);
+          final updatedVoteModel =
+              (currentVote.data() ?? const VoteModel()).incrementWeight();
+          if (updatedVoteModel != null) {
+            // increment vote, decrement account, increment candidate
+            transaction.set(voteRef, updatedVoteModel);
+            transaction.set(accountRef, updatedAccountModel);
+            transaction
+                .update(candidateRef, {'weight': FieldValue.increment(1)});
+          }
+        }
+      }
+    });
+  }
+
+  Future<void> decrementVote(String decisionId, String candidateId) async {
+    final decisionRef = getDecision(decisionId);
+    final voteRef = getMyVoteForCandidate(decisionId, candidateId);
+    final accountRef = getMyAccountForDecision(decisionId);
+    final candidateRef = getCandidateForDecision(decisionId, candidateId);
+
+    db.runTransaction((transaction) async {
+      // check that the decision is allowing voting
+      final decisionSnapshot = await transaction.get(decisionRef);
+      final decision = decisionSnapshot.data();
+      if (decision != null && decision.state == 'open') {
+        // check that the vote.weight is above 0
+        final currentVote = await transaction.get(voteRef);
+        final updatedVoteModel =
+            (currentVote.data() ?? const VoteModel()).decrementWeight();
+        if (updatedVoteModel != null) {
+          // decrement vote, decrement candidate
+          transaction.set(voteRef, updatedVoteModel);
+          transaction
+              .update(candidateRef, {'weight': FieldValue.increment(-1)});
+          //  increment account only if balance is less than maximum of 10
+          // (this should never happen because of vote floor at 0, but still)
+          final currentAccount = await transaction.get(accountRef);
+          final updatedAccountModel =
+              (currentAccount.data() ?? const AccountModel())
+                  .incrementbalance();
+          if (updatedAccountModel != null) {
+            transaction.set(accountRef, updatedAccountModel);
+          }
+        }
+      }
+    });
   }
 }
