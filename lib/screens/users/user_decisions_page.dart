@@ -2,7 +2,7 @@ import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
-import 'package:decisionroll/providers/database/user_decisions_stream_provider.dart';
+import 'package:decisionroll/providers/database/user_decisions_provider.dart';
 import 'package:decisionroll/screens/components/add_new_decision.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,12 +17,9 @@ class UserDecisionsPage extends ConsumerWidget {
     required this.userId,
   }) : super(key: key);
 
-  final TextEditingController newDecisionController = TextEditingController();
-
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    debugPrint("user decisions page: $userId");
-    final decisionsAsync = ref.watch(userDecisionsStreamProvider(userId));
+    final decisionsAsync = ref.watch(userDecisionsProvider(userId));
     return Scaffold(
       backgroundColor: purpleColor,
       appBar: const MyAppBar(
@@ -40,48 +37,52 @@ class UserDecisionsPage extends ConsumerWidget {
           SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
           AddNewDecisionWidget(),
           SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-          decisionsAsync.maybeWhen(
-            orElse: () => const SizedBox(
-              child: Text("no dataa..."),
+          SizedBox(
+            height: SizeConfig.screenHeight(c) * 0.7,
+            child: decisionsAsync.maybeWhen(
+              orElse: () => const SizedBox(
+                child: Text("no dataa..."),
+              ),
+              loading: () => const BubbleLoadingWidget(),
+              data: (decisions) {
+                final decisionsList = decisions.toList();
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: decisionsList.length,
+                    itemBuilder: (context, index) {
+                      final decision = decisionsList[index];
+                      // Text(decisionsList[index].title),
+                      return InkWell(
+                          onTap: () {
+                            GoRouter.of(context).go('/decision/${decision.id}');
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 15,
+                                horizontal: 15,
+                              ),
+                              child: Column(children: [
+                                Container(child: boldTextElem(decision.title)),
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: paddedWidgetList([
+                                      (decision.outcome != null)
+                                          ? propText(
+                                              'Outcome: ', decision.outcome)
+                                          : null,
+                                      propText('Owner: ', decision.ownerId),
+                                      propText('State: ', decision.state),
+                                    ]))
+                              ])));
+                    });
+              },
             ),
-            loading: () => const BubbleLoadingWidget(),
-            data: (decisions) {
-              final decisionsList = decisions.toList();
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: decisionsList.length,
-                  itemBuilder: (context, index) {
-                    final decision = decisionsList[index];
-                    // Text(decisionsList[index].title),
-                    return InkWell(
-                        onTap: () {
-                          GoRouter.of(context).push('/decision/${decision.id}');
-                        },
-                        child: Container(
-                            margin: const EdgeInsets.only(top: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 15,
-                            ),
-                            child: Column(children: [
-                              Container(child: boldTextElem(decision.title)),
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: paddedWidgetList([
-                                    (decision.outcome != null)
-                                        ? propText(
-                                            'Outcome: ', decision.outcome)
-                                        : null,
-                                    propText('Owner: ', decision.ownerId),
-                                    propText('State: ', decision.state),
-                                  ]))
-                            ])));
-                  });
-            },
           )
         ]),
       ),
