@@ -81,8 +81,8 @@ class UserDecisionsPage extends ConsumerWidget {
                                               ? propText('Outcome: ',
                                                   decision.data()?.outcome)
                                               : null,
-                                          propText('Owner: ',
-                                              decision.data()?.ownerId),
+                                          // propText('Owner: ',
+                                          //     decision.data()?.ownerId),
                                           propText('State: ',
                                               decision.data()?.state),
                                         ]))
