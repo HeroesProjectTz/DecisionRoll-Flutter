@@ -7,8 +7,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Color color;
   final Color titlecolor;
+  final List<Widget> action;
   const MyAppBar(
       {this.title = '',
+      this.action = const [],
       this.color = whiteBackgroundColor,
       this.titlecolor = Colors.black,
       this.height = kToolbarHeight,
@@ -20,6 +22,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     // SizeConfig(context);
     return AppBar(
       // height: preferredSize.height,/
+      actions: action,
       iconTheme: const IconThemeData(color: blueColor),
       backgroundColor: color,
       title: Text(title,
