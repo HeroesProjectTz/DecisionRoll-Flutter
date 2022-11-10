@@ -123,13 +123,22 @@ class DecisionPage extends ConsumerWidget {
   }
 
   Widget _buildStateTransitionButton(BuildContext c, WidgetRef ref) {
-    final decisionAsync = ref.watch(decisionProvider(decisionId));
-
-    return decisionAsync.maybeWhen(
+    return ref.read(databaseProvider).maybeWhen(
         orElse: () => const SizedBox(),
         loading: () => const SizedBox(),
-        data: (decision) =>
-            _buildStateTransitionButtonFromDecision(c, ref, decision));
+        data: (db) {
+          final decisionAsync = ref.watch(decisionProvider(decisionId));
+          return decisionAsync.maybeWhen(
+              orElse: () => const SizedBox(),
+              loading: () => const SizedBox(),
+              data: (decision) {
+                if (db != null && decision.ownerId != db.uid) {
+                  return const SizedBox();
+                }
+                return _buildStateTransitionButtonFromDecision(
+                    c, ref, decision);
+              });
+        });
   }
 
   Widget _buildCandidatesWheel(BuildContext c, WidgetRef ref) {
@@ -247,12 +256,26 @@ class DecisionPage extends ConsumerWidget {
   }
 
   Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
-    // TODO conditionally include CandidateAddWidget
-    // return const SizedBox();
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: CandidateAddWidget(decisionId),
-    );
+    return ref.read(databaseProvider).maybeWhen(
+        orElse: () => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (db) {
+          if (db != null) {
+            final decisionAsync = ref.watch(decisionProvider(decisionId));
+            return decisionAsync.maybeWhen(
+                orElse: () => const SizedBox(),
+                loading: () => const SizedBox(),
+                data: (decision) {
+                  if (decision.ownerId == db.uid) {
+                    return Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: CandidateAddWidget(decisionId));
+                  }
+                  return const SizedBox();
+                });
+          }
+          return const SizedBox();
+        });
   }
 }
 

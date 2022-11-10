@@ -1,6 +1,5 @@
 import 'package:decisionroll/providers/database/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/database/account_model.dart';
 import '../../models/database/decision_model.dart';
 
 final decisionProvider = StreamProvider.autoDispose
