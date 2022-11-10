@@ -1,5 +1,6 @@
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,12 +18,11 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("homepage loaded");
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: whiteBackgroundColor,
       appBar: MyAppBar(),
       drawer: MyDrawer(),
-      body: const Center(
+      body: Center(
         child: Text(
           "Homepage ",
           style: TextStyle(
