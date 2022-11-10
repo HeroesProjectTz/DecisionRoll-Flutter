@@ -13,7 +13,7 @@ class QrCodeView extends StatelessWidget {
     return Scaffold(
         body: Center(
       child: QrImage(
-        data: "https://decisionrollmobile.vercel.app/#/decision/$decisionId",
+        data: "${Uri.base.origin}/#/decision/$decisionId",
         version: QrVersions.auto,
         // size: 200.0,
         // backgroundColor: Colors.black,
