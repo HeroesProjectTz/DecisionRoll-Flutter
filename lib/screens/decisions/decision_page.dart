@@ -1,3 +1,4 @@
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/screens/components/candidate_vote_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:decisionroll/providers/database/decision_candidates_provider.dart';
 import 'package:decisionroll/common/bubble_loading_widget.dart';
@@ -21,7 +23,7 @@ import '../components/candidate_add_widget.dart';
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
 
-  DecisionPage({
+  const DecisionPage({
     Key? key,
     required this.decisionId,
   }) : super(key: key);
@@ -31,6 +33,20 @@ class DecisionPage extends ConsumerWidget {
       title: title,
       titlecolor: Colors.white,
       color: blueColor05,
+      action: [
+        InkWell(
+          onTap: () => goRouter.go('/decision/$decisionId/qr'),
+          child: QrImage(
+            data:
+                "https://decisionrollmobile.vercel.app/#/decision/$decisionId",
+            version: QrVersions.auto,
+            // size: 200.0,
+            // backgroundColor: Colors.black,
+            foregroundColor: Colors.black,
+          ),
+        ),
+        const SizedBox(width: 100)
+      ],
     );
   }
 
@@ -110,7 +126,7 @@ class DecisionPage extends ConsumerWidget {
             child: Center(
               child: Text(
                 _buttonTextFromState(decision.state),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -183,7 +199,7 @@ class DecisionPage extends ConsumerWidget {
 
   Widget _buildStatusTextFromText(String text) {
     return Text(text,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
         ));
