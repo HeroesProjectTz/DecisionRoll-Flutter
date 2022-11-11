@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:decisionroll/common/candidate_colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/providers/database/database_provider.dart';
 
+import '../../models/database/candidate_ctrl.dart';
 import '../../providers/database/candidate_vote_provider.dart';
 
 class CandidateVoteControl extends ConsumerWidget {
-  final DocumentSnapshot<CandidateModel?> candidate;
+  final CandidateCtrl candidate;
 
   CandidateVoteControl(this.candidate) : super(key: Key(candidate.id));
 
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    final candidateModel = candidate.data() ?? CandidateModel.blank();
-    final color = CandidateColors.getColorFromIdx(candidateModel.index);
+    final color = CandidateColors.getColorFromIdx(candidate.index);
     return Row(
       children: [
         Expanded(
@@ -28,7 +26,7 @@ class CandidateVoteControl extends ConsumerWidget {
               ),
               decoration: BoxDecoration(border: Border.all(color: color)),
               child: Text(
-                candidateModel.title,
+                candidate.title,
                 style: const TextStyle(
                   color: Color(
                     0xff545454,
@@ -50,24 +48,18 @@ class CandidateVoteControl extends ConsumerWidget {
         ));
   }
 
-  Widget _buildYourVoteText(BuildContext c, WidgetRef ref,
-      DocumentSnapshot<CandidateModel?> candidate) {
+  Widget _buildYourVoteText(
+      BuildContext c, WidgetRef ref, CandidateCtrl candidate) {
     final voteAsync = ref.watch(candidateVoteProvider(candidate));
     return voteAsync.maybeWhen(
-        orElse: () => const SizedBox(),
-        // loading: () => _buildYourVoteTextFromWeight(10),
+        orElse: () => _buildYourVoteTextFromWeight(0),
         data: (vote) {
           return _buildYourVoteTextFromWeight(vote.weight);
         });
   }
 
-  Widget _buildVotingButtons(BuildContext c, WidgetRef ref,
-      DocumentSnapshot<CandidateModel?> candidate, Color color) {
-    final decisionId =
-        candidate.reference.parent.parent?.id ?? "decision-parent-missing";
-    final candidateId = candidate.id;
-    final candidateModel = candidate.data() ?? CandidateModel.blank();
-
+  Widget _buildVotingButtons(
+      BuildContext c, WidgetRef ref, CandidateCtrl candidate, Color color) {
     return Expanded(
       flex: 1,
       child: Container(
@@ -82,7 +74,7 @@ class CandidateVoteControl extends ConsumerWidget {
                 onTap: () {
                   ref.read(databaseProvider).whenData((db) async {
                     if (db != null) {
-                      db.decrementVote(decisionId, candidateId);
+                      db.decrementVote(candidate.decisionId, candidate.id);
                     }
                   });
                 },
@@ -107,7 +99,7 @@ class CandidateVoteControl extends ConsumerWidget {
                 onTap: () {
                   ref.read(databaseProvider).whenData((db) async {
                     if (db != null) {
-                      db.incrementVote(decisionId, candidateId);
+                      db.incrementVote(candidate.decisionId, candidate.id);
                     }
                   });
                 },
