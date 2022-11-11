@@ -182,7 +182,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                 .then((value) {
                               debugPrint(
                                   "email sign up complete. Return: $value");
-                              GoRouter.of(c).go('/authwrapper');
+                              // GoRouter.of(c).go('/authwrapper');
                             });
                             if (mounted) {
                               setState(() {
