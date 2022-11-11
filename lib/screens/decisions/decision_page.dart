@@ -44,7 +44,6 @@ class DecisionPage extends ConsumerWidget {
             foregroundColor: Colors.black,
           ),
         ),
-        const SizedBox(width: 100)
       ],
     );
   }
