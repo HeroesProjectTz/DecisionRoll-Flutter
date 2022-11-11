@@ -54,10 +54,15 @@ class CandidatesWheel extends ConsumerWidget {
 
   List<ChartCandidate> _buildChartCandidateList(
       List<DocumentSnapshot<CandidateModel>> candidates) {
-    return candidates.map((candidateSnapshot) {
-      final candidateModel = candidateSnapshot.data() ?? CandidateModel.blank();
+    final candidateModels = candidates.map((candidateSnapshot) =>
+        candidateSnapshot.data() ?? CandidateModel.blank());
+    final totalWeight =
+        candidateModels.fold<int>(0, (total, c) => total + c.weight);
+    return candidateModels.map((candidateModel) {
       final color = CandidateColors.getColorFromIdx(candidateModel.index);
-      return ChartCandidate(candidateModel.title, candidateModel.weight, color);
+      // if all candidates are zero, display a uniform weight chart
+      final weight = totalWeight == 0 ? 1 : candidateModel.weight;
+      return ChartCandidate(candidateModel.title, weight, color);
     }).toList();
   }
 }
