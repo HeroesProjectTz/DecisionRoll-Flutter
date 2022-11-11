@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:decisionroll/utilities/images.dart';
-import 'package:lottie/lottie.dart';
 
 class BubbleLoadingWidget extends StatelessWidget {
   const BubbleLoadingWidget({
@@ -9,7 +7,7 @@ class BubbleLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
         // child: Lottie.asset(bubbleloadingIcon, alignment: Alignment.center));
         child: CircularProgressIndicator());
   }
