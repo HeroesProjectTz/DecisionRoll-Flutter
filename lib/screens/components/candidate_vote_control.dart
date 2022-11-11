@@ -1,5 +1,3 @@
-import 'package:decisionroll/utilities/colors.dart';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:decisionroll/models/database/candidate_model.dart';
@@ -76,7 +74,7 @@ class CandidateVoteControl extends ConsumerWidget {
           decoration: BoxDecoration(
             color: color,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10.5),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 13),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
