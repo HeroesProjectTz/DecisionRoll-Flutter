@@ -1,5 +1,7 @@
 import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/screens/decisions/candidate_vote_control.dart';
+import 'package:decisionroll/screens/decisions/state_transition_button_widget.dart';
+import 'package:decisionroll/screens/decisions/status_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/common/my_appbar.dart';
@@ -24,7 +26,7 @@ import 'candidate_vote_controls_widget.dart';
 import 'candidates_wheel_widget.dart';
 import 'decision_app_bar_widget.dart';
 
-class DecisionPage extends ConsumerWidget {
+class DecisionPage extends StatelessWidget {
   final String decisionId;
 
   const DecisionPage({
@@ -33,7 +35,7 @@ class DecisionPage extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext c, WidgetRef ref) {
+  Widget build(BuildContext c) {
     debugPrint("rebuilding decision $decisionId. ${c.debugDoingBuild}");
     return Scaffold(
         // backgroundColor: purpleColor,
@@ -54,11 +56,11 @@ class DecisionPage extends ConsumerWidget {
                   // shrinkWrap: true,
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
-                    Center(child: _buildStatusText(c, ref)),
+                    Center(child: StatusText(decisionId)),
                     CandidateVoteControls(decisionId),
                     CandidateAddWidget(decisionId),
                     SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-                    _buildStateTransitionButton(c, ref),
+                    StateTransitionButton(decisionId),
                   ],
                 ),
               ),
@@ -66,120 +68,5 @@ class DecisionPage extends ConsumerWidget {
             ],
           ),
         ));
-  }
-
-  String _buttonTextFromState(String state) {
-    switch (state) {
-      case 'new':
-        return 'Open Voting';
-      case 'open':
-        return 'Close Voting';
-      case 'closed':
-        return "Let's Roll!";
-      case 'finished':
-        return "Re-open Voting";
-      default:
-        return "Close Voting";
-    }
-  }
-
-  Widget _buildStateTransitionButtonFromDecision(
-      BuildContext c, WidgetRef ref, DecisionModel decision) {
-    return Center(
-      child: SizedBox(
-        width: SizeConfig.screenWidth(c) / 1.6,
-        child: InkWell(
-          onTap: () {
-            ref.read(databaseProvider).whenData((db) async {
-              if (db != null) {
-                db.advanceDecisionState(decisionId);
-              }
-            });
-          },
-          child: Container(
-            decoration: const BoxDecoration(color: blueColor05),
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12.8),
-            child: Center(
-              child: Text(
-                _buttonTextFromState(decision.state),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStateTransitionButton(BuildContext c, WidgetRef ref) {
-    return ref.read(databaseProvider).maybeWhen(
-        orElse: () => const SizedBox(),
-        loading: () => const SizedBox(),
-        data: (db) {
-          final decisionAsync = ref.watch(decisionProvider(decisionId));
-          return decisionAsync.maybeWhen(
-              orElse: () => const SizedBox(),
-              loading: () => const SizedBox(),
-              data: (decision) {
-                if (db != null && decision.ownerId != db.uid) {
-                  return const SizedBox();
-                }
-                return _buildStateTransitionButtonFromDecision(
-                    c, ref, decision);
-              });
-        });
-  }
-
-  Widget _buildStatusTextFromText(String text) {
-    return Text(text,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ));
-  }
-
-  Widget _buildStatusText(BuildContext c, WidgetRef ref) {
-    final decisionAsync = ref.watch(decisionProvider(decisionId));
-
-    return decisionAsync.maybeWhen(
-        orElse: () => const SizedBox(),
-        loading: () => const SizedBox(),
-        data: (decision) {
-          switch (decision.state) {
-            case 'new':
-              return _buildStatusTextFromText("Wait for voting to start.");
-            case 'open':
-              {
-                final accountAsync =
-                    ref.watch(decisionAccountProvider(decisionId));
-                return accountAsync.maybeWhen(
-                    orElse: () => const SizedBox(
-                          child: Text("no dataa..."),
-                        ),
-                    loading: () => const BubbleLoadingWidget(),
-                    data: (account) {
-                      final balance = account.balance;
-                      return _buildStatusTextFromText(
-                          "you have $balance votes remaining");
-                    });
-              }
-            case 'closed':
-              return _buildStatusTextFromText("Voting has closed.");
-            case 'finished':
-              {
-                if (decision.outcome != null) {
-                  return _buildStatusTextFromText(
-                      "Outcome: ${decision.outcome}");
-                } else {
-                  return _buildStatusTextFromText("<outcome missing>");
-                }
-              }
-            default:
-              return _buildStatusTextFromText("<invalid state>");
-          }
-        });
   }
 }
