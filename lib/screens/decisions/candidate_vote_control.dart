@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:decisionroll/models/database/candidate_model.dart';
 import 'package:decisionroll/common/candidate_colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/providers/database/database_provider.dart';
 
@@ -54,8 +52,7 @@ class CandidateVoteControl extends ConsumerWidget {
       BuildContext c, WidgetRef ref, CandidateCtrl candidate) {
     final voteAsync = ref.watch(candidateVoteProvider(candidate));
     return voteAsync.maybeWhen(
-        orElse: () => const SizedBox(),
-        // loading: () => _buildYourVoteTextFromWeight(10),
+        orElse: () => _buildYourVoteTextFromWeight(0),
         data: (vote) {
           return _buildYourVoteTextFromWeight(vote.weight);
         });
