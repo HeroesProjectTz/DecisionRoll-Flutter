@@ -20,6 +20,7 @@ import '../../providers/database/decision_account_provider.dart';
 import '../../providers/database/decision_candidate_controls_provider.dart';
 import '../../providers/database/decision_provider.dart';
 import '../decisions/candidate_add_widget.dart';
+import 'decision_app_bar_widget.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
@@ -29,41 +30,12 @@ class DecisionPage extends ConsumerWidget {
     required this.decisionId,
   }) : super(key: key);
 
-  MyAppBar _buildAppBarWithTitle(String title) {
-    return MyAppBar(
-      title: title,
-      titlecolor: Colors.white,
-      color: blueColor05,
-      action: [
-        InkWell(
-          onTap: () => goRouter.go('/decision/$decisionId/qr'),
-          child: QrImage(
-            data: "${Uri.base.origin}/#/decision/$decisionId",
-            version: QrVersions.auto,
-            // size: 200.0,
-            // backgroundColor: Colors.black,
-            foregroundColor: Colors.black,
-          ),
-        ),
-      ],
-    );
-  }
-
-  MyAppBar _buildAppBar(BuildContext c, WidgetRef ref) {
-    final decisionAsync = ref.watch(decisionProvider(decisionId));
-
-    return decisionAsync.maybeWhen(
-        orElse: () => _buildAppBarWithTitle("Let's Roll"),
-        loading: () => _buildAppBarWithTitle("Let's Roll"),
-        data: (decision) => _buildAppBarWithTitle(decision.title));
-  }
-
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     debugPrint("rebuilding decision $decisionId. ${c.debugDoingBuild}");
     return Scaffold(
         // backgroundColor: purpleColor,
-        appBar: _buildAppBar(c, ref),
+        appBar: DecisionAppBar(decisionId),
         drawer: const MyDrawer(),
         body: Padding(
           padding: const EdgeInsets.symmetric(
