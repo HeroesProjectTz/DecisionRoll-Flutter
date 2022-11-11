@@ -3,14 +3,11 @@ import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/database/user_decisions_provider.dart';
-import 'package:decisionroll/providers/database/user_provider.dart';
 import 'package:decisionroll/screens/components/add_new_decision.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/database/database_provider.dart';
 
 class UserDecisionsPage extends ConsumerWidget {
   final String userId;
@@ -65,8 +62,8 @@ class UserDecisionsPage extends ConsumerWidget {
           SizedBox(height: SizeConfig.screenHeight(c) * 0.02),
           AddNewDecisionWidget(),
           SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
-          SizedBox(
-            height: SizeConfig.screenHeight(c) * 0.7,
+          Expanded(
+            // height: SizeConfig.screenHeight(c) * 0.7,
             child: decisionsAsync.maybeWhen(
               orElse: () => const SizedBox(
                 child: Text("no data..."),

@@ -17,6 +17,9 @@ class AddNewDecisionWidget extends ConsumerWidget {
         Expanded(
           flex: 3,
           child: TextField(
+            onSubmitted: (value) {
+              _newDecisionOnSubmit(c, ref);
+            },
             controller: titleController,
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -35,19 +38,7 @@ class AddNewDecisionWidget extends ConsumerWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              if (titleController.text != '') {
-                ref.read(databaseProvider).whenData((db) async {
-                  if (db != null) {
-                    final decision =
-                        await db.addDecisionByTitle(titleController.text);
-                    debugPrint("added Decision ${decision.id}");
-                    goRouter.go('/decision/${decision.id}');
-                  } else {
-                    debugPrint("FirestoreDatabase was null");
-                  }
-                  titleController.clear();
-                });
-              }
+              _newDecisionOnSubmit(c, ref);
             },
             child: Container(
               decoration: const BoxDecoration(color: blueColor05),
@@ -67,5 +58,20 @@ class AddNewDecisionWidget extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  _newDecisionOnSubmit(BuildContext c, WidgetRef ref) {
+    if (titleController.text != '') {
+      ref.read(databaseProvider).whenData((db) async {
+        if (db != null) {
+          final decision = await db.addDecisionByTitle(titleController.text);
+          debugPrint("added Decision ${decision.id}");
+          goRouter.go('/decision/${decision.id}');
+        } else {
+          debugPrint("FirestoreDatabase was null");
+        }
+        titleController.clear();
+      });
+    }
   }
 }

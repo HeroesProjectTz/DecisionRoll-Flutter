@@ -1,3 +1,4 @@
+import 'package:decisionroll/common/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -47,10 +48,13 @@ class Authentication {
     try {
       _auth
           .createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          )
-          .then((value) => value.user!.updateDisplayName(fullName));
+        email: email,
+        password: password,
+      )
+          .then((value) {
+        goRouter.go('/user/${value.user?.uid}/decisions');
+        value.user!.updateDisplayName(fullName);
+      });
     } on FirebaseAuthException catch (e) {
       await showDialog(
           context: context,

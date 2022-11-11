@@ -14,6 +14,7 @@ class CandidateAddWidget extends ConsumerWidget {
 
   final TextEditingController titleController = TextEditingController();
 
+  @override
   Widget build(BuildContext c, WidgetRef ref) {
     final decisionAsync = ref.watch(decisionProvider(decisionId));
 
@@ -31,16 +32,19 @@ class CandidateAddWidget extends ConsumerWidget {
       Expanded(
         flex: 3,
         child: TextField(
+          onSubmitted: (value) {
+            _candidateAddOnSubmit(c, ref);
+          },
           controller: titleController,
           decoration: InputDecoration(
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             isDense: true,
-            contentPadding: EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(15),
             fillColor: Colors.white,
             filled: true,
             hintText: "Enter option ${nextIndex + 1}",
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: Color(0xff545454),
             ),
           ),
@@ -50,26 +54,30 @@ class CandidateAddWidget extends ConsumerWidget {
         flex: 1,
         child: InkWell(
           onTap: () {
-            ref.read(databaseProvider).whenData((db) async {
-              if (db != null) {
-                db.addCandidateByTitle(decisionId, titleController.text);
-              }
-            });
-            debugPrint("Add ${titleController.text}");
+            _candidateAddOnSubmit(c, ref);
           },
           child: Container(
             color: color,
-            child: Center(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10.5),
+            child: const Center(
               child: Text("Add",
                   style: TextStyle(
                     color: Colors.white,
                   )),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10.5),
           ),
         ),
       ),
       // CandidateVoteControl(purpleColor),
     ]);
+  }
+
+  _candidateAddOnSubmit(BuildContext c, WidgetRef ref) {
+    ref.read(databaseProvider).whenData((db) async {
+      if (db != null) {
+        db.addCandidateByTitle(decisionId, titleController.text);
+      }
+    });
+    debugPrint("Add ${titleController.text}");
   }
 }

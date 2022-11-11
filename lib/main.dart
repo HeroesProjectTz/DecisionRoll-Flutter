@@ -81,11 +81,11 @@ class AuthenticationWrapper extends ConsumerWidget {
     return authState.when(
         data: (data) {
           if (data != null) {
-            WidgetsBinding.instance?.addPostFrameCallback((_) {
-              context.go('/homepage');
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              goRouter.go('/user/${data.uid}/decisions');
             });
           } else {
-            WidgetsBinding.instance?.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               context.go('/signin');
             });
           }
