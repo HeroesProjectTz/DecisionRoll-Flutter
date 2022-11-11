@@ -269,32 +269,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 SizedBox(
                   height: SizeConfig.screenHeight(c) * 0.05,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xffD9D9D9),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 15,
-                    horizontal: 15,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        facebookIcon,
-                        height: SizeConfig.screenHeight(c) * 0.03,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.screenWidth(c) * 0.1,
-                      ),
-                      const Text('SignIn  With Facebook',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ))
-                    ],
-                  ),
-                ),
               ])),
         ));
   }
