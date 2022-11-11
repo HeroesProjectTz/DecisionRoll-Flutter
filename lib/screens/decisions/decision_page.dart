@@ -20,6 +20,7 @@ import '../../providers/database/decision_account_provider.dart';
 import '../../providers/database/decision_candidate_controls_provider.dart';
 import '../../providers/database/decision_provider.dart';
 import '../decisions/candidate_add_widget.dart';
+import 'candidate_vote_controls_widget.dart';
 import 'candidates_wheel_widget.dart';
 import 'decision_app_bar_widget.dart';
 
@@ -54,7 +55,7 @@ class DecisionPage extends ConsumerWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     Center(child: _buildStatusText(c, ref)),
-                    _buildCandidateVoteControls(c, ref),
+                    CandidateVoteControls(decisionId),
                     _buildCandidateAddWidget(c, ref),
                     SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
                     _buildStateTransitionButton(c, ref),
@@ -180,24 +181,6 @@ class DecisionPage extends ConsumerWidget {
               return _buildStatusTextFromText("<invalid state>");
           }
         });
-  }
-
-  Widget _buildCandidateVoteControls(BuildContext c, WidgetRef ref) {
-    final candidates = ref.watch(decisionCandidateCtrlsProvider(decisionId));
-
-    return SizedBox(
-        // height: SizeConfig.screenHeight(c) * 0.3,
-        child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: candidates.length,
-            itemBuilder: (context, index) {
-              final candidate = candidates[index];
-              return Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: CandidateVoteControl(candidate),
-              );
-            }));
   }
 
   Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
