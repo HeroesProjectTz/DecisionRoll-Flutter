@@ -17,6 +17,7 @@ import '../../common/candidate_colors.dart';
 import '../../models/database/decision_model.dart';
 import '../../providers/database/database_provider.dart';
 import '../../providers/database/decision_account_provider.dart';
+import '../../providers/database/decision_candidate_controls_provider.dart';
 import '../../providers/database/decision_provider.dart';
 import '../components/candidate_add_widget.dart';
 
@@ -59,7 +60,7 @@ class DecisionPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    debugPrint("rebuilding..");
+    debugPrint("rebuilding decision $decisionId. ${c.debugDoingBuild}");
     return Scaffold(
         // backgroundColor: purpleColor,
         appBar: _buildAppBar(c, ref),
@@ -249,28 +250,20 @@ class DecisionPage extends ConsumerWidget {
   }
 
   Widget _buildCandidateVoteControls(BuildContext c, WidgetRef ref) {
-    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
+    final candidates = ref.watch(decisionCandidateCtrlsProvider(decisionId));
 
     return SizedBox(
         // height: SizeConfig.screenHeight(c) * 0.3,
-        child: candidatesAsync.maybeWhen(
-            orElse: () => const SizedBox(
-                  child: Text("no dataa..."),
-                ),
-            loading: () => const BubbleLoadingWidget(),
-            data: (candidates) {
-              debugPrint("build vote control rebuild");
-              return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: candidates.length,
-                  itemBuilder: (context, index) {
-                    final candidate = candidates[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: CandidateVoteControl(candidate),
-                    );
-                  });
+        child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: candidates.length,
+            itemBuilder: (context, index) {
+              final candidate = candidates[index];
+              return Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: CandidateVoteControl(candidate),
+              );
             }));
   }
 
