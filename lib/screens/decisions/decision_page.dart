@@ -56,7 +56,7 @@ class DecisionPage extends ConsumerWidget {
                   children: [
                     Center(child: _buildStatusText(c, ref)),
                     CandidateVoteControls(decisionId),
-                    _buildCandidateAddWidget(c, ref),
+                    CandidateAddWidget(decisionId),
                     SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
                     _buildStateTransitionButton(c, ref),
                   ],
@@ -180,29 +180,6 @@ class DecisionPage extends ConsumerWidget {
             default:
               return _buildStatusTextFromText("<invalid state>");
           }
-        });
-  }
-
-  Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
-    return ref.read(databaseProvider).maybeWhen(
-        orElse: () => const SizedBox(),
-        loading: () => const SizedBox(),
-        data: (db) {
-          if (db != null) {
-            final decisionAsync = ref.watch(decisionProvider(decisionId));
-            return decisionAsync.maybeWhen(
-                orElse: () => const SizedBox(),
-                loading: () => const SizedBox(),
-                data: (decision) {
-                  if (decision.ownerId == db.uid) {
-                    return Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: CandidateAddWidget(decisionId));
-                  }
-                  return const SizedBox();
-                });
-          }
-          return const SizedBox();
         });
   }
 }

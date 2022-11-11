@@ -16,12 +16,7 @@ class CandidateAddWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext c, WidgetRef ref) {
-    final decisionAsync = ref.watch(decisionProvider(decisionId));
-
-    return decisionAsync.maybeWhen(
-        orElse: () => const SizedBox(),
-        loading: () => const SizedBox(),
-        data: (decision) => _buildWithDecision(c, ref, decision));
+    return _buildCandidateAddWidget(c, ref);
   }
 
   Widget _buildWithDecision(
@@ -79,5 +74,28 @@ class CandidateAddWidget extends ConsumerWidget {
       }
     });
     debugPrint("Add ${titleController.text}");
+  }
+
+  Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
+    return ref.read(databaseProvider).maybeWhen(
+        orElse: () => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (db) {
+          if (db != null) {
+            final decisionAsync = ref.watch(decisionProvider(decisionId));
+            return decisionAsync.maybeWhen(
+                orElse: () => const SizedBox(),
+                loading: () => const SizedBox(),
+                data: (decision) {
+                  if (decision.ownerId == db.uid) {
+                    return Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: _buildWithDecision(c, ref, decision));
+                  }
+                  return const SizedBox();
+                });
+          }
+          return const SizedBox();
+        });
   }
 }
