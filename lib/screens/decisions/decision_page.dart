@@ -20,6 +20,7 @@ import '../../providers/database/decision_account_provider.dart';
 import '../../providers/database/decision_candidate_controls_provider.dart';
 import '../../providers/database/decision_provider.dart';
 import '../decisions/candidate_add_widget.dart';
+import 'candidates_wheel_widget.dart';
 import 'decision_app_bar_widget.dart';
 
 class DecisionPage extends ConsumerWidget {
@@ -45,7 +46,7 @@ class DecisionPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildCandidatesWheel(c, ref),
+              CandidatesWheel(decisionId),
               Expanded(
                 // height: SizeConfig.screenHeight(c) * 0.3,
                 child: ListView(
@@ -129,46 +130,6 @@ class DecisionPage extends ConsumerWidget {
                     c, ref, decision);
               });
         });
-  }
-
-  Widget _buildCandidatesWheel(BuildContext c, WidgetRef ref) {
-    final candidatesAsync = ref.watch(decisionCandidatesProvider(decisionId));
-
-    return candidatesAsync.maybeWhen(
-        orElse: () => const SizedBox(
-              child: Text("no dataa..."),
-            ),
-        loading: () => const BubbleLoadingWidget(),
-        data: (candidates) {
-          return Container(
-              constraints: BoxConstraints(
-                  minHeight: SizeConfig.screenHeight(c) * 0.25,
-                  maxHeight: SizeConfig.screenHeight(c) * 0.40),
-              child: SfCircularChart(series: <CircularSeries>[
-                // Renders doughnut chart
-                DoughnutSeries<ChartCandidate, String>(
-                    animationDuration: 0,
-                    animationDelay: 0,
-                    dataSource: _buildChartCandidateList(candidates),
-                    dataLabelSettings: const DataLabelSettings(
-                        isVisible: true, textStyle: TextStyle(fontSize: 12)),
-                    dataLabelMapper: (datum, index) {
-                      return '${datum.weight}';
-                    },
-                    pointColorMapper: (ChartCandidate data, _) => data.color,
-                    xValueMapper: (ChartCandidate data, _) => data.title,
-                    yValueMapper: (ChartCandidate data, _) => data.weight)
-              ]));
-        });
-  }
-
-  List<ChartCandidate> _buildChartCandidateList(
-      List<DocumentSnapshot<CandidateModel>> candidates) {
-    return candidates.map((candidateSnapshot) {
-      final candidateModel = candidateSnapshot.data() ?? CandidateModel.blank();
-      final color = CandidateColors.getColorFromIdx(candidateModel.index);
-      return ChartCandidate(candidateModel.title, candidateModel.weight, color);
-    }).toList();
   }
 
   Widget _buildStatusTextFromText(String text) {
@@ -261,11 +222,4 @@ class DecisionPage extends ConsumerWidget {
           return const SizedBox();
         });
   }
-}
-
-class ChartCandidate {
-  ChartCandidate(this.title, this.weight, this.color);
-  final String title;
-  final int weight;
-  final Color color;
 }
