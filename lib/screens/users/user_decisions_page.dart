@@ -3,7 +3,7 @@ import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/database/user_decisions_provider.dart';
-import 'package:decisionroll/screens/components/add_new_decision.dart';
+import 'package:decisionroll/screens/users/add_new_decision.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
