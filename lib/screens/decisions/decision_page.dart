@@ -74,10 +74,11 @@ class DecisionPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildCandidatesWheel(c, ref),
-              // SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
               Expanded(
+                // height: SizeConfig.screenHeight(c) * 0.3,
                 child: ListView(
-                  shrinkWrap: true,
+                  // shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     Center(child: _buildStatusText(c, ref)),
                     _buildCandidateVoteControls(c, ref),
@@ -86,7 +87,8 @@ class DecisionPage extends ConsumerWidget {
                     _buildStateTransitionButton(c, ref),
                   ],
                 ),
-              )
+              ),
+              SizedBox(height: SizeConfig.screenHeight(c) * 0.05),
             ],
           ),
         ));
@@ -260,6 +262,7 @@ class DecisionPage extends ConsumerWidget {
             data: (candidates) {
               debugPrint("build vote control rebuild");
               return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: candidates.length,
                   itemBuilder: (context, index) {
