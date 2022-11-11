@@ -74,6 +74,7 @@ class CandidateAddWidget extends ConsumerWidget {
       }
     });
     debugPrint("Add ${titleController.text}");
+    titleController.clear();
   }
 
   Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
