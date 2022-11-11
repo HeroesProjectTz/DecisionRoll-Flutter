@@ -94,6 +94,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   height: SizeConfig.screenHeight(c) * 0.05,
                 ),
                 TextFieldWidget(
+                    onSubmitted: (value) {
+                      _signUpOnSubmit(c);
+                    },
                     obscureText: obscureText,
                     suffixIcon: InkWell(
                       onTap: () {
@@ -117,79 +120,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   onTap: isLoading == true
                       ? () {}
                       : () {
-                          if (emailController.text == '') {
-                            ScaffoldMessenger.of(c).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                    right: 10, left: 10, bottom: 10),
-                                backgroundColor: blueColor,
-                                content: Text('Email is required'),
-                              ),
-                            );
-                          } else if (passwordController.text == '') {
-                            ScaffoldMessenger.of(c).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                    right: 10, left: 10, bottom: 10),
-                                backgroundColor: blueColor,
-                                content: Text('Password is required'),
-                              ),
-                            );
-                          } else if (fullNameController.text == '') {
-                            ScaffoldMessenger.of(c).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                    right: 10, left: 10, bottom: 10),
-                                backgroundColor: blueColor,
-                                content: Text('Full Name is required'),
-                              ),
-                            );
-                          } else if (comfirmPasswordController.text == '') {
-                            ScaffoldMessenger.of(c).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                    right: 10, left: 10, bottom: 10),
-                                backgroundColor: blueColor,
-                                content: Text('Comfirm Password is required'),
-                              ),
-                            );
-                          } else if (passwordController.text !=
-                              comfirmPasswordController.text) {
-                            ScaffoldMessenger.of(c).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                    right: 10, left: 10, bottom: 10),
-                                backgroundColor: blueColor,
-                                content: Text('Password do not match'),
-                              ),
-                            );
-                          } else {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            ref
-                                .read(authenticationProvider)
-                                .signUpWithEmailAndPassword(
-                                    fullNameController.text,
-                                    emailController.text,
-                                    passwordController.text,
-                                    c)
-                                .then((value) {
-                              debugPrint(
-                                  "email sign up complete. Return: $value");
-                              // GoRouter.of(c).go('/authwrapper');
-                            });
-                            if (mounted) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                          }
+                          _signUpOnSubmit(c);
                         },
                   child: isLoading == true
                       ? const Center(child: CircularProgressIndicator())
@@ -271,5 +202,71 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 ),
               ])),
         ));
+  }
+
+  _signUpOnSubmit(BuildContext c) {
+    if (emailController.text == '') {
+      ScaffoldMessenger.of(c).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+          backgroundColor: blueColor,
+          content: Text('Email is required'),
+        ),
+      );
+    } else if (passwordController.text == '') {
+      ScaffoldMessenger.of(c).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+          backgroundColor: blueColor,
+          content: Text('Password is required'),
+        ),
+      );
+    } else if (fullNameController.text == '') {
+      ScaffoldMessenger.of(c).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+          backgroundColor: blueColor,
+          content: Text('Full Name is required'),
+        ),
+      );
+    } else if (comfirmPasswordController.text == '') {
+      ScaffoldMessenger.of(c).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+          backgroundColor: blueColor,
+          content: Text('Comfirm Password is required'),
+        ),
+      );
+    } else if (passwordController.text != comfirmPasswordController.text) {
+      ScaffoldMessenger.of(c).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+          backgroundColor: blueColor,
+          content: Text('Password do not match'),
+        ),
+      );
+    } else {
+      setState(() {
+        isLoading = true;
+      });
+      ref
+          .read(authenticationProvider)
+          .signUpWithEmailAndPassword(fullNameController.text,
+              emailController.text, passwordController.text, c)
+          .then((value) {
+        debugPrint("email sign up complete. Return: $value");
+        // GoRouter.of(c).go('/authwrapper');
+      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 }
