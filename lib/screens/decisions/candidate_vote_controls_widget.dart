@@ -12,7 +12,8 @@ class CandidateVoteControls extends ConsumerWidget {
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     final candidates = ref.watch(decisionCandidateCtrlsProvider(decisionId));
-    debugPrint("rebuilding candidate vote controls: $candidates");
+    final candidateData = candidates.map((e) => e.title);
+    debugPrint("rebuilding candidate vote controls: $candidateData");
     return SizedBox(
         // height: SizeConfig.screenHeight(c) * 0.3,
         child: ListView.builder(
