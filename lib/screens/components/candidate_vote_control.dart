@@ -15,6 +15,7 @@ class CandidateVoteControl extends ConsumerWidget {
 
   CandidateVoteControl(this.candidate) : super(key: Key(candidate.id));
 
+  @override
   Widget build(BuildContext c, WidgetRef ref) {
     final candidateModel = candidate.data() ?? CandidateModel.blank();
     final color = CandidateColors.getColorFromIdx(candidateModel.index);
@@ -23,20 +24,20 @@ class CandidateVoteControl extends ConsumerWidget {
         Expanded(
           flex: 3,
           child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 8,
                 vertical: 15,
               ),
+              decoration: BoxDecoration(border: Border.all(color: color)),
               child: Text(
                 candidateModel.title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(
                     0xff545454,
                   ),
                   fontSize: 13,
                 ),
-              ),
-              decoration: BoxDecoration(border: Border.all(color: color))),
+              )),
         ),
         _buildVotingButtons(c, ref, candidate, color),
       ],
@@ -45,7 +46,7 @@ class CandidateVoteControl extends ConsumerWidget {
 
   Widget _buildYourVoteTextFromWeight(int weight) {
     return Text(weight.toString(),
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ));
@@ -55,8 +56,8 @@ class CandidateVoteControl extends ConsumerWidget {
       DocumentSnapshot<CandidateModel?> candidate) {
     final voteAsync = ref.watch(candidateVoteProvider(candidate));
     return voteAsync.maybeWhen(
-        orElse: () => _buildYourVoteTextFromWeight(0),
-        loading: () => _buildYourVoteTextFromWeight(0),
+        orElse: () => const SizedBox(),
+        // loading: () => _buildYourVoteTextFromWeight(10),
         data: (vote) {
           return _buildYourVoteTextFromWeight(vote.weight);
         });

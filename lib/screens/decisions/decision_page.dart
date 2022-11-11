@@ -60,6 +60,7 @@ class DecisionPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext c, WidgetRef ref) {
+    debugPrint("rebuilding..");
     return Scaffold(
         // backgroundColor: purpleColor,
         appBar: _buildAppBar(c, ref),
@@ -257,6 +258,7 @@ class DecisionPage extends ConsumerWidget {
                 ),
             loading: () => const BubbleLoadingWidget(),
             data: (candidates) {
+              debugPrint("build vote control rebuild");
               return ListView.builder(
                   shrinkWrap: true,
                   itemCount: candidates.length,
