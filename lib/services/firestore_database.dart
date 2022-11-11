@@ -5,6 +5,8 @@ import 'package:decisionroll/models/database/account_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/database/user_model.dart';
+
 class FirestoreDatabase {
   final FirebaseFirestore db;
   final String uid;
@@ -12,6 +14,11 @@ class FirestoreDatabase {
   FirestoreDatabase({required this.db, required this.uid});
 
   // ==== type-safe collection access helpers ====
+  CollectionReference<UserModel> usersCollection() =>
+      db.collection('users').withConverter<UserModel>(
+          fromFirestore: (snapshot, _) => UserModel.fromSnapshot(snapshot),
+          toFirestore: (user, _) => user.toMap());
+
   CollectionReference<DecisionModel> decisionsCollection() =>
       db.collection('decisions').withConverter<DecisionModel>(
           fromFirestore: (snapshot, _) => DecisionModel.fromSnapshot(snapshot),
@@ -65,6 +72,10 @@ class FirestoreDatabase {
   }
 
   // ==== databes get operations ====
+  DocumentReference<UserModel> getUser(String userId) {
+    return usersCollection().doc(userId);
+  }
+
   DocumentReference<DecisionModel> getDecision(String decisionId) {
     return decisionsCollection().doc(decisionId);
   }
@@ -100,7 +111,7 @@ class FirestoreDatabase {
     db.runTransaction((transaction) async {
       final decisionSnapshot = await transaction.get(decisionRef);
       final decision = decisionSnapshot.data();
-      if (decision != null) {
+      if (decision != null && decision.ownerId == uid) {
         final candidatesSnapshot =
             await decisionCandidatesCollection(decisionId).snapshots().first;
         final candidatesList = candidatesSnapshot.docs;

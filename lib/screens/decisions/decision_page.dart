@@ -1,3 +1,4 @@
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/screens/components/candidate_vote_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/utilities/colors.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:decisionroll/providers/database/decision_candidates_provider.dart';
 import 'package:decisionroll/common/bubble_loading_widget.dart';
@@ -21,7 +23,7 @@ import '../components/candidate_add_widget.dart';
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
 
-  DecisionPage({
+  const DecisionPage({
     Key? key,
     required this.decisionId,
   }) : super(key: key);
@@ -31,6 +33,19 @@ class DecisionPage extends ConsumerWidget {
       title: title,
       titlecolor: Colors.white,
       color: blueColor05,
+      action: [
+        InkWell(
+          onTap: () => goRouter.go('/decision/$decisionId/qr'),
+          child: QrImage(
+            data: "${Uri.base.origin}/#/decision/$decisionId",
+            version: QrVersions.auto,
+            // size: 200.0,
+            // backgroundColor: Colors.black,
+            foregroundColor: Colors.black,
+          ),
+        ),
+        const SizedBox(width: 100)
+      ],
     );
   }
 
@@ -45,6 +60,7 @@ class DecisionPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext c, WidgetRef ref) {
+    debugPrint("rebuilding..");
     return Scaffold(
         // backgroundColor: purpleColor,
         appBar: _buildAppBar(c, ref),
@@ -110,7 +126,7 @@ class DecisionPage extends ConsumerWidget {
             child: Center(
               child: Text(
                 _buttonTextFromState(decision.state),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -123,13 +139,22 @@ class DecisionPage extends ConsumerWidget {
   }
 
   Widget _buildStateTransitionButton(BuildContext c, WidgetRef ref) {
-    final decisionAsync = ref.watch(decisionProvider(decisionId));
-
-    return decisionAsync.maybeWhen(
+    return ref.read(databaseProvider).maybeWhen(
         orElse: () => const SizedBox(),
         loading: () => const SizedBox(),
-        data: (decision) =>
-            _buildStateTransitionButtonFromDecision(c, ref, decision));
+        data: (db) {
+          final decisionAsync = ref.watch(decisionProvider(decisionId));
+          return decisionAsync.maybeWhen(
+              orElse: () => const SizedBox(),
+              loading: () => const SizedBox(),
+              data: (decision) {
+                if (db != null && decision.ownerId != db.uid) {
+                  return const SizedBox();
+                }
+                return _buildStateTransitionButtonFromDecision(
+                    c, ref, decision);
+              });
+        });
   }
 
   Widget _buildCandidatesWheel(BuildContext c, WidgetRef ref) {
@@ -174,7 +199,7 @@ class DecisionPage extends ConsumerWidget {
 
   Widget _buildStatusTextFromText(String text) {
     return Text(text,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
         ));
@@ -233,6 +258,7 @@ class DecisionPage extends ConsumerWidget {
                 ),
             loading: () => const BubbleLoadingWidget(),
             data: (candidates) {
+              debugPrint("build vote control rebuild");
               return ListView.builder(
                   shrinkWrap: true,
                   itemCount: candidates.length,
@@ -247,12 +273,26 @@ class DecisionPage extends ConsumerWidget {
   }
 
   Widget _buildCandidateAddWidget(BuildContext c, WidgetRef ref) {
-    // TODO conditionally include CandidateAddWidget
-    // return const SizedBox();
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: CandidateAddWidget(decisionId),
-    );
+    return ref.read(databaseProvider).maybeWhen(
+        orElse: () => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (db) {
+          if (db != null) {
+            final decisionAsync = ref.watch(decisionProvider(decisionId));
+            return decisionAsync.maybeWhen(
+                orElse: () => const SizedBox(),
+                loading: () => const SizedBox(),
+                data: (decision) {
+                  if (decision.ownerId == db.uid) {
+                    return Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: CandidateAddWidget(decisionId));
+                  }
+                  return const SizedBox();
+                });
+          }
+          return const SizedBox();
+        });
   }
 }
 

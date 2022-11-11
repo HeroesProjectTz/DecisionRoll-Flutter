@@ -3,11 +3,14 @@ import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/database/user_decisions_provider.dart';
+import 'package:decisionroll/providers/database/user_provider.dart';
 import 'package:decisionroll/screens/components/add_new_decision.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../providers/database/database_provider.dart';
 
 class UserDecisionsPage extends ConsumerWidget {
   final String userId;
@@ -17,16 +20,41 @@ class UserDecisionsPage extends ConsumerWidget {
     required this.userId,
   }) : super(key: key);
 
+  PreferredSizeWidget _buildAppBarFromTitle(String title) {
+    return MyAppBar(
+      title: title,
+      titlecolor: Colors.white,
+      color: blueColor05,
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext c, WidgetRef ref) {
+    return _buildAppBarFromTitle("My Decisions");
+    // final userAsync = ref.watch(userProvider(userId));
+    // return userAsync.maybeWhen(
+    //     orElse: () => _buildAppBarFromTitle("Someone's Decisions"),
+    //     data: (user) {
+    //       return ref.read(databaseProvider).maybeWhen(
+    //           orElse: () => _buildAppBarFromTitle("Someone's Decisions"),
+    //           data: (db) {
+    //             if (db != null) {
+    //               if (db.uid == user.uid) {
+    //                 return _buildAppBarFromTitle("My Decisions");
+    //               } else {
+    //                 return _buildAppBarFromTitle("${user.name}'s Decisions");
+    //               }
+    //             }
+    //             return _buildAppBarFromTitle("Someone's Decisions");
+    //           });
+    //     });
+  }
+
   @override
   Widget build(BuildContext c, WidgetRef ref) {
     final decisionsAsync = ref.watch(userDecisionsProvider(userId));
     return Scaffold(
       backgroundColor: purpleColor,
-      appBar: const MyAppBar(
-        title: 'My Decisions',
-        titlecolor: Colors.white,
-        color: blueColor05,
-      ),
+      appBar: _buildAppBar(c, ref),
       drawer: const MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -41,7 +69,7 @@ class UserDecisionsPage extends ConsumerWidget {
             height: SizeConfig.screenHeight(c) * 0.7,
             child: decisionsAsync.maybeWhen(
               orElse: () => const SizedBox(
-                child: Text("no dataa..."),
+                child: Text("no data..."),
               ),
               loading: () => const BubbleLoadingWidget(),
               data: (decisions) {

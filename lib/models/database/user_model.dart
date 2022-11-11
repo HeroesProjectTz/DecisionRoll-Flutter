@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
-  String uid;
-  String name;
-  UserModel({
+  final String uid;
+  final String name;
+  const UserModel({
     required this.uid,
     required this.name,
   });
@@ -13,6 +15,16 @@ class UserModel {
       'uid': uid,
       'name': name,
     };
+  }
+
+  factory UserModel.blank() {
+    return const UserModel(uid: "<missing uid>", name: "<missing name>");
+  }
+
+  factory UserModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final map = snapshot.data() ?? {};
+    return UserModel.fromMap(map);
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
