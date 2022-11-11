@@ -1,5 +1,5 @@
 import 'package:decisionroll/common/routes.dart';
-import 'package:decisionroll/screens/components/candidate_vote_control.dart';
+import 'package:decisionroll/screens/decisions/candidate_vote_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decisionroll/common/my_appbar.dart';
@@ -19,7 +19,7 @@ import '../../providers/database/database_provider.dart';
 import '../../providers/database/decision_account_provider.dart';
 import '../../providers/database/decision_candidate_controls_provider.dart';
 import '../../providers/database/decision_provider.dart';
-import '../components/candidate_add_widget.dart';
+import '../decisions/candidate_add_widget.dart';
 
 class DecisionPage extends ConsumerWidget {
   final String decisionId;
