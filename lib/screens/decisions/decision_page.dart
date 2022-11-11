@@ -36,7 +36,6 @@ class DecisionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext c) {
-    debugPrint("rebuilding decision $decisionId. ${c.debugDoingBuild}");
     return Scaffold(
         // backgroundColor: purpleColor,
         appBar: DecisionAppBar(decisionId),
