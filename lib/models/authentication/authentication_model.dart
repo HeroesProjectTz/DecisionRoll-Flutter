@@ -24,6 +24,7 @@ class Authentication {
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      goRouter.go('/user/${_auth.currentUser?.uid}/decisions');
     } on FirebaseAuthException catch (e) {
       await showDialog(
         context: context,

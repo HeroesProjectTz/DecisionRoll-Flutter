@@ -204,7 +204,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               emailController.text, passwordController.text, c)
           .then((value) {
         debugPrint("email sign in complete. Return: $value");
-        GoRouter.of(c).go('/authwrapper');
+        // GoRouter.of(c).go('/authwrapper');
       });
       if (mounted) {
         setState(() {
