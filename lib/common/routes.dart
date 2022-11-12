@@ -49,7 +49,8 @@ final goRouter = GoRouter(
         final decisionId = state.params['decisionid'];
 
         if (decisionId != null) {
-          return CheckAuth(page: DecisionPage(decisionId: decisionId));
+          return CheckAuth(
+              pageBuilder: (db) => DecisionPage(decisionId: decisionId));
         } else {
           throw ("missing decisionId param");
         }
@@ -58,7 +59,7 @@ final goRouter = GoRouter(
     GoRoute(
         path: '/homepage',
         builder: (context, state) {
-          return const CheckAuth(page: HomePage());
+          return CheckAuth(pageBuilder: (db) => HomePage());
         }),
     GoRoute(
         path: '/user/:uid/decisions',
@@ -66,7 +67,8 @@ final goRouter = GoRouter(
           final userId = state.params['uid'];
 
           if (userId != null) {
-            return CheckAuth(page: UserDecisionsPage(userId: userId));
+            return CheckAuth(
+                pageBuilder: (db) => UserDecisionsPage(userId: userId));
           } else {
             throw ("missing userId param");
           }
@@ -74,7 +76,7 @@ final goRouter = GoRouter(
     GoRoute(
         path: '/account',
         builder: (context, state) {
-          return const CheckAuth(page: AccountPage());
+          return CheckAuth(pageBuilder: (db) => AccountPage());
         })
   ],
 );
