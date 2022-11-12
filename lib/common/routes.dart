@@ -10,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../screens/authentication/chech_auth.dart';
+
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -44,55 +46,35 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/decision/:decisionid',
       builder: (context, state) {
-        if (FirebaseAuth.instance.currentUser == null) {
-          return const LoginPage();
-        } else {
-          final decisionId = state.params['decisionid'];
+        final decisionId = state.params['decisionid'];
 
-          if (decisionId != null) {
-            return DecisionPage(decisionId: decisionId);
-          } else {
-            throw ("missing decisionId param");
-          }
+        if (decisionId != null) {
+          return CheckAuth(page: DecisionPage(decisionId: decisionId));
+        } else {
+          throw ("missing decisionId param");
         }
       },
     ),
     GoRoute(
         path: '/homepage',
         builder: (context, state) {
-          if (FirebaseAuth.instance.currentUser == null) {
-            return const LoginPage();
-          } else {
-            return const HomePage();
-          }
+          return const CheckAuth(page: HomePage());
         }),
     GoRoute(
         path: '/user/:uid/decisions',
         builder: (context, state) {
-          if (FirebaseAuth.instance.currentUser == null) {
-            return const LoginPage();
-          } else {
-            final userId = state.params['uid'];
+          final userId = state.params['uid'];
 
-            if (userId != null) {
-              return UserDecisionsPage(userId: userId);
-            } else {
-              throw ("missing userId param");
-            }
+          if (userId != null) {
+            return CheckAuth(page: UserDecisionsPage(userId: userId));
+          } else {
+            throw ("missing userId param");
           }
         }),
     GoRoute(
         path: '/account',
         builder: (context, state) {
-          if (FirebaseAuth.instance.currentUser == null) {
-            return const LoginPage();
-          }
-          // final id = state.params['id'];
-          else {
-            return const AccountPage(
-                // userId: id.toString(),
-                );
-          }
-        }),
+          return const CheckAuth(page: AccountPage());
+        })
   ],
 );
