@@ -10,7 +10,7 @@ final databaseProvider = FutureProvider<FirestoreDatabase?>((ref) async {
 
   // we only have a valid DB if the user is signed in
   if (auth != null) {
-    return FirestoreDatabase(db: firebase, uid: auth.uid);
+    return FirestoreDatabase(db: firebase, user: auth);
   }
   return null;
 });
