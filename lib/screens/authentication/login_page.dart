@@ -1,4 +1,5 @@
 import 'package:decisionroll/common/option_view.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:universal_html/html.dart' as html;
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -137,8 +139,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         .read(authenticationProvider)
                         .signInWithGoogle(c)
                         .then((value) {
-                      debugPrint("email sign in complete. Return: $value");
-                      GoRouter.of(c).go('/authwrapper');
+                      print(goRouter.location);
+                      if (goRouter.location.startsWith('/decision')) {
+                        // goRouter.goNamed(goRouter.location);
+                        print('hello');
+                        html.window.location.reload();
+                      } else {
+                        goRouter
+                            .go('/user/${value.currentUser?.uid}/decisions');
+                      }
                     });
                   },
                   child: Container(

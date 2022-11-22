@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:universal_html/html.dart' as html;
 
 class Authentication {
   // For Authentication related functions you need an instance of FirebaseAuth
@@ -24,7 +25,12 @@ class Authentication {
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      goRouter.go('/user/${_auth.currentUser?.uid}/decisions');
+      if (goRouter.location.startsWith('/decision')) {
+        // goRouter.goNamed(goRouter.location);
+        html.window.location.reload();
+      } else {
+        goRouter.go('/user/${_auth.currentUser?.uid}/decisions');
+      }
     } on FirebaseAuthException catch (e) {
       await showDialog(
         context: context,

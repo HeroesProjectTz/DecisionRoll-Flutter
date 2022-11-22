@@ -54,6 +54,7 @@ dependencies:
   flutter_facebook_auth: ^5.0.1
   cloud_firestore: ^4.0.4
   qr_flutter: ^4.0.0
+  universal_html: ^2.0.8
 
 dev_dependencies:
   flutter_test:
