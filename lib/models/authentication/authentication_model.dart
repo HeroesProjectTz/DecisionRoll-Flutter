@@ -6,6 +6,15 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:universal_html/html.dart' as html;
 
+pushToDecisionOrUserDecision(String userId) {
+  if (goRouter.location.startsWith('/decision')) {
+    // goRouter.goNamed(goRouter.location);
+    html.window.location.reload();
+  } else {
+    goRouter.go('/user/$userId/decisions');
+  }
+}
+
 class Authentication {
   // For Authentication related functions you need an instance of FirebaseAuth
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,12 +34,7 @@ class Authentication {
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      if (goRouter.location.startsWith('/decision')) {
-        // goRouter.goNamed(goRouter.location);
-        html.window.location.reload();
-      } else {
-        goRouter.go('/user/${_auth.currentUser?.uid}/decisions');
-      }
+      pushToDecisionOrUserDecision(_auth.currentUser?.uid.toString() ?? '');
     } on FirebaseAuthException catch (e) {
       await showDialog(
         context: context,
@@ -59,7 +63,7 @@ class Authentication {
         password: password,
       )
           .then((value) {
-        goRouter.go('/user/${value.user?.uid}/decisions');
+        pushToDecisionOrUserDecision(value.user?.uid.toString() ?? '');
         value.user!.updateDisplayName(fullName);
       });
     } on FirebaseAuthException catch (e) {
@@ -98,6 +102,7 @@ class Authentication {
 
       // Once signed in, return the UserCredential
       await _auth.signInWithPopup(googleProvider);
+      pushToDecisionOrUserDecision(_auth.currentUser?.uid ?? '');
 
       // Or use signInWithRedirect
       // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
@@ -118,6 +123,8 @@ class Authentication {
 
       try {
         await _auth.signInWithCredential(credential);
+
+        pushToDecisionOrUserDecision(_auth.currentUser?.uid ?? '');
       } on FirebaseAuthException catch (e) {
         await showDialog(
           context: context,
