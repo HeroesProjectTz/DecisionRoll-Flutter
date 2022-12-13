@@ -1,3 +1,4 @@
+import 'package:decisionroll/common/common_methods.dart';
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
@@ -206,50 +207,25 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   _signUpOnSubmit(BuildContext c) {
     if (emailController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Email is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Email is required');
     } else if (passwordController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Password is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Password is required');
     } else if (fullNameController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Full Name is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Full name is required ');
     } else if (comfirmPasswordController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Comfirm Password is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Comfirm password is required');
     } else if (passwordController.text != comfirmPasswordController.text) {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Password do not match'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Password not match');
     } else {
       setState(() {
         isLoading = true;

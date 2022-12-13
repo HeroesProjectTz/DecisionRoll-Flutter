@@ -1,3 +1,4 @@
+import 'package:decisionroll/common/common_methods.dart';
 import 'package:decisionroll/common/option_view.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
@@ -171,23 +172,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   _loginOnSubmit(BuildContext c) {
     if (emailController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Email is required'),
-        ),
-      );
+      ref.read(commonMethodsProvider).showSnackBarMessage(c, 'Email required');
     } else if (passwordController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Password is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Passowrd required');
     } else {
       setState(() {
         isLoading = true;
