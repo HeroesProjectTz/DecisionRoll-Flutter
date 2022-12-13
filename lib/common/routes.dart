@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../screens/authentication/chech_auth.dart';
+import '../screens/authentication/check_auth.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -59,7 +59,7 @@ final goRouter = GoRouter(
     GoRoute(
         path: '/homepage',
         builder: (context, state) {
-          return CheckAuth(pageBuilder: (db) => HomePage());
+          return CheckAuth(pageBuilder: (db) => const HomePage());
         }),
     GoRoute(
         path: '/user/:uid/decisions',
@@ -76,7 +76,7 @@ final goRouter = GoRouter(
     GoRoute(
         path: '/account',
         builder: (context, state) {
-          return CheckAuth(pageBuilder: (db) => AccountPage());
+          return CheckAuth(pageBuilder: (db) => const AccountPage());
         })
   ],
 );
