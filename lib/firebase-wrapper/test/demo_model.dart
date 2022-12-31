@@ -9,7 +9,8 @@ class DemoModel extends AbstractModel<DemoModel, PersistedDemo> {
   DemoModel(this.title);
 
   @override
-  PersistedDemo _persistWith(DocumentSnapshot<DemoModel> snapshot) {
-    return PersistedDemo(snapshot, this);
+  PersistedDemo _persistWith(
+      DocumentSnapshot<DemoModel> snapshot, FirestoreDatabase db) {
+    return PersistedDemo.fromSnapshot(snapshot, db);
   }
 }

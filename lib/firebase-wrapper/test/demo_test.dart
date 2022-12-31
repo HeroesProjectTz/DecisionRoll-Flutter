@@ -8,7 +8,16 @@ DocumentSnapshot<DemoModel> makeDemoSnapshot() {
   throw UnimplementedError();
 }
 
+FirestoreDatabase getDb() {
+  throw UnimplementedError();
+}
+
 void main() {
   final DocumentSnapshot<DemoModel> demoSnapshot = makeDemoSnapshot();
-  final maybePersistedDemo = safelyWrapDocumentSnapshot<DemoModel, PersistedDemo>(demoSnapshot).getRight();
+  final db = getDb();
+  final demoModel = DemoModel("test");
+  final maybePersistedDemo =
+      safelyWrapDocumentSnapshot<DemoModel, PersistedDemo>(demoSnapshot)
+          .getRight();
+  final persistedDemo = PersistedDemo.fromSnapshot(demoSnapshot, db);
 }

@@ -3,7 +3,5 @@ import 'demo_model.dart';
 import 'package:decisionroll/firebase-wrapper/firebase_wrapper.dart';
 
 class PersistedDemo extends PersistedModel<DemoModel, PersistedDemo> {
-
-  PersistedDemo(snapshot, model): super(snapshot, model);
-
+  PersistedDemo.fromSnapshot(snapshot, db) : super.fromSnapshot(snapshot, db);
 }
