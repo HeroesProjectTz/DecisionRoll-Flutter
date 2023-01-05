@@ -9,7 +9,9 @@ import 'package:universal_html/html.dart' as html;
 pushToDecisionOrUserDecision(String userId) {
   if (goRouter.location.startsWith('/decision')) {
     // goRouter.goNamed(goRouter.location);
-    html.window.location.reload();
+    if (kIsWeb) {
+      html.window.location.reload();
+    }
   } else {
     goRouter.go('/user/$userId/decisions');
   }
