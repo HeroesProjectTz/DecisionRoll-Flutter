@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:universal_html/html.dart' as html;
 
 pushToDecisionOrUserDecision(String userId) {
   if (goRouter.location.startsWith('/decision')) {
-    // goRouter.goNamed(goRouter.location);
-    if (kIsWeb) {
-      html.window.location.reload();
-    }
+    debugPrint(goRouter.location);
+    goRouter.go(goRouter.location);
+
+    // if (kIsWeb) {
+    //   html.window.location.reload();
+    // }
   } else {
-    goRouter.go('/user/$userId/decisions');
+    goRouter.go('/decision/7rCr9WpC0ccIPnT3W04t');
   }
 }
 
@@ -35,8 +36,11 @@ class Authentication {
   Future signInWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      pushToDecisionOrUserDecision(_auth.currentUser?.uid.toString() ?? '');
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        pushToDecisionOrUserDecision(value.user?.uid.toString() ?? '');
+      });
     } on FirebaseAuthException catch (e) {
       await showDialog(
         context: context,

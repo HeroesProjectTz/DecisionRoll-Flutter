@@ -181,14 +181,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       setState(() {
         isLoading = true;
       });
-      ref
-          .read(authenticationProvider)
-          .signInWithEmailAndPassword(
-              emailController.text, passwordController.text, c)
-          .then((value) {
-        debugPrint("email sign in complete. Return: $value");
-        // GoRouter.of(c).go('/authwrapper');
-      });
+      ref.read(authenticationProvider).signInWithEmailAndPassword(
+          emailController.text, passwordController.text, c);
       if (mounted) {
         setState(() {
           isLoading = false;
