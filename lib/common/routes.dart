@@ -20,18 +20,22 @@ final goRouter = GoRouter(
   debugLogDiagnostics: true,
   routes: [
     GoRoute(
+      name: 'signin',
       path: '/signin',
       builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
+      name: 'signup',
       path: '/signup',
       builder: (context, state) => const SignUpPage(),
     ),
     GoRoute(
+      name: 'authWrapper',
       path: '/authwrapper',
       builder: (context, state) => const AuthenticationWrapper(),
     ),
     GoRoute(
+      name: 'decisionQR',
       path: '/decision/:decisionid/qr',
       builder: (context, state) {
         final decisionId = state.params['decisionid'];
@@ -43,6 +47,7 @@ final goRouter = GoRouter(
       },
     ),
     GoRoute(
+      name: 'decisionDetails',
       path: '/decision/:decisionid',
       builder: (context, state) {
         final decisionId = state.params['decisionid'];
@@ -56,11 +61,13 @@ final goRouter = GoRouter(
       },
     ),
     GoRoute(
+        name: 'homepage',
         path: '/homepage',
         builder: (context, state) {
           return CheckAuth(pageBuilder: (db) => const HomePage());
         }),
     GoRoute(
+        name: 'userDecisions',
         path: '/user/:uid/decisions',
         builder: (context, state) {
           final userId = state.params['uid'];
@@ -73,6 +80,7 @@ final goRouter = GoRouter(
           }
         }),
     GoRoute(
+        name: 'account',
         path: '/account',
         builder: (context, state) {
           return CheckAuth(pageBuilder: (db) => const AccountPage());

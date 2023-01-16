@@ -14,7 +14,7 @@ pushToDecisionOrUserDecision(String userId) {
     //   html.window.location.reload();
     // }
   } else {
-    goRouter.go('/decision/7rCr9WpC0ccIPnT3W04t');
+    goRouter.goNamed('userDecisions', params: {'uid': userId});
   }
 }
 

@@ -109,7 +109,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 InkWell(
                   onTap: () {
-                    GoRouter.of(c).go('/signup');
+                    context.goNamed('signup');
                   },
                   child: RichText(
                     text: const TextSpan(

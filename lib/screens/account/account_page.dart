@@ -1,6 +1,7 @@
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
 import 'package:decisionroll/common/option_view.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,15 +19,15 @@ class AccountPage extends ConsumerWidget {
   Widget build(BuildContext c, WidgetRef ref) {
     return Scaffold(
         backgroundColor: whiteBackgroundColor,
-        appBar: MyAppBar(),
-        drawer: MyDrawer(),
+        appBar: const MyAppBar(),
+        drawer: const MyDrawer(),
         body: Center(
           child: InkWell(
             onTap: () {
               ref
                   .read(authenticationProvider)
                   .signOut()
-                  .whenComplete(() => GoRouter.of(c).go('/authwrapper'));
+                  .whenComplete(() => goRouter.goNamed('authWrapper'));
             },
             child: SizedBox(
                 width: SizeConfig.screenWidth(c),

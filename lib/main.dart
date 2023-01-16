@@ -82,11 +82,11 @@ class AuthenticationWrapper extends ConsumerWidget {
         data: (data) {
           if (data != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              goRouter.go('/user/${data.uid}/decisions');
+              goRouter.goNamed('userDecisions', params: {'uid': data.uid});
             });
           } else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.go('/signin');
+              context.goNamed('signin');
             });
           }
           return Container(color: Colors.white);

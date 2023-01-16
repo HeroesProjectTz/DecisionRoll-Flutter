@@ -66,7 +66,8 @@ class AddNewDecisionWidget extends ConsumerWidget {
         if (db != null) {
           final decision = await db.addDecisionByTitle(titleController.text);
           debugPrint("added Decision ${decision.id}");
-          goRouter.go('/decision/${decision.id}');
+          goRouter
+              .goNamed('decisionDetails', params: {'decisionid': decision.id});
         } else {
           debugPrint("FirestoreDatabase was null");
         }

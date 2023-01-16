@@ -1,19 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decisionroll/common/candidate_colors.dart';
-import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../common/my_appbar.dart';
-import '../../common/routes.dart';
 import '../../common/sizeConfig.dart';
 import '../../models/database/candidate_model.dart';
-import '../../models/database/decision_model.dart';
-import '../../providers/database/database_provider.dart';
 import '../../providers/database/decision_candidates_provider.dart';
-import '../../providers/database/decision_provider.dart';
 
 class CandidatesWheel extends ConsumerWidget {
   final String decisionId;
