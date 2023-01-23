@@ -8,7 +8,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 pushToDecisionOrUserDecision(String userId) {
   if (goRouter.location.startsWith('/decision')) {
     debugPrint(goRouter.location);
-    goRouter.go(goRouter.location);
+    goRouter.pop();
 
     // if (kIsWeb) {
     //   html.window.location.reload();
@@ -189,7 +189,7 @@ class Authentication {
 
   // Current userName
   String getCurrentUserUID() {
-    String uid = _auth.currentUser!.uid.toString();
+    String uid = _auth.currentUser?.uid.toString() ?? 'null';
     return uid;
   }
 

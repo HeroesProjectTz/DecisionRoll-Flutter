@@ -2,7 +2,6 @@ import 'package:decisionroll/providers/database/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/bubble_loading_widget.dart';
-import '../../providers/authentication/authentication_provider.dart';
 import 'login_page.dart';
 import 'package:decisionroll/services/firestore_database.dart';
 
@@ -27,6 +26,7 @@ class CheckAuth extends ConsumerWidget {
         },
         error: (err, st) {
           debugPrint("login failed. Error: $err, Stacktrace: $st");
+
           return const LoginPage();
         },
         loading: () => const BubbleLoadingWidget());
