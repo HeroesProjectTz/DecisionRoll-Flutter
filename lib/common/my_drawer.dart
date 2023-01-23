@@ -1,7 +1,7 @@
+import 'package:decisionroll/common/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
 import 'package:decisionroll/utilities/colors.dart';
@@ -28,7 +28,7 @@ class MyDrawer extends ConsumerWidget {
             ),
           ),
           InkWell(
-            onTap: () => GoRouter.of(context).go('/homepage'),
+            onTap: () => goRouter.goNamed('homepage'),
             child: const ListTile(
               leading: Icon(
                 FontAwesomeIcons.diceFour,
@@ -38,8 +38,9 @@ class MyDrawer extends ConsumerWidget {
             ),
           ),
           InkWell(
-            onTap: () => GoRouter.of(context).go(
-                '/user/${ref.read(authenticationProvider).getCurrentUserUID()}/decisions'),
+            onTap: () => goRouter.goNamed('userDecisions', params: {
+              'uid': ref.read(authenticationProvider).getCurrentUserUID()
+            }),
             child: const ListTile(
               leading: Icon(
                 FontAwesomeIcons.dice,
@@ -49,7 +50,7 @@ class MyDrawer extends ConsumerWidget {
             ),
           ),
           InkWell(
-            onTap: () => GoRouter.of(context).go('/account'),
+            onTap: () => goRouter.goNamed('account'),
             child: const ListTile(
               leading: Icon(
                 FontAwesomeIcons.user,

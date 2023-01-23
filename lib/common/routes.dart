@@ -6,14 +6,15 @@ import 'package:decisionroll/screens/decisions/decision_page.dart';
 import 'package:decisionroll/screens/decisions/qr_code_scanner.dart';
 import 'package:decisionroll/screens/home/homepage.dart';
 import 'package:decisionroll/screens/users/user_decisions_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:decisionroll/models/authentication/authentication_model.dart';
 
-import '../screens/authentication/chech_auth.dart';
+import '../screens/authentication/check_auth.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _currentUser = Authentication().getCurrentUserUID();
 
 final goRouter = GoRouter(
   initialLocation: '/authwrapper',
@@ -21,18 +22,25 @@ final goRouter = GoRouter(
   debugLogDiagnostics: true,
   routes: [
     GoRoute(
+      name: 'signin',
       path: '/signin',
-      builder: (context, state) => const LoginPage(),
+      builder: (context, state) {
+        debugPrint("CurrentUserInRoutes: $_currentUser");
+        return const LoginPage();
+      },
     ),
     GoRoute(
+      name: 'signup',
       path: '/signup',
       builder: (context, state) => const SignUpPage(),
     ),
     GoRoute(
+      name: 'authWrapper',
       path: '/authwrapper',
       builder: (context, state) => const AuthenticationWrapper(),
     ),
     GoRoute(
+      name: 'decisionQR',
       path: '/decision/:decisionid/qr',
       builder: (context, state) {
         final decisionId = state.params['decisionid'];
@@ -44,11 +52,17 @@ final goRouter = GoRouter(
       },
     ),
     GoRoute(
+      name: 'decisionDetails',
       path: '/decision/:decisionid',
+      redirect: (state) {
+        _currentUser == 'null' ? '/signin' : null;
+        return null;
+      },
       builder: (context, state) {
         final decisionId = state.params['decisionid'];
-
-        if (decisionId != null) {
+        if (_currentUser == 'null') {
+          return const LoginPage();
+        } else if (decisionId != null) {
           return CheckAuth(
               pageBuilder: (db) => DecisionPage(decisionId: decisionId));
         } else {
@@ -57,15 +71,17 @@ final goRouter = GoRouter(
       },
     ),
     GoRoute(
+        name: 'homepage',
         path: '/homepage',
         builder: (context, state) {
-          return CheckAuth(pageBuilder: (db) => HomePage());
+          return CheckAuth(pageBuilder: (db) => const HomePage());
         }),
     GoRoute(
+        name: 'userDecisions',
         path: '/user/:uid/decisions',
         builder: (context, state) {
           final userId = state.params['uid'];
-
+          debugPrint("CurrentUserInRoutes: $_currentUser");
           if (userId != null) {
             return CheckAuth(
                 pageBuilder: (db) => UserDecisionsPage(userId: userId));
@@ -74,9 +90,10 @@ final goRouter = GoRouter(
           }
         }),
     GoRoute(
+        name: 'account',
         path: '/account',
         builder: (context, state) {
-          return CheckAuth(pageBuilder: (db) => AccountPage());
+          return CheckAuth(pageBuilder: (db) => const AccountPage());
         })
   ],
 );

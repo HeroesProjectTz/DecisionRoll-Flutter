@@ -1,4 +1,6 @@
+import 'package:decisionroll/common/common_methods.dart';
 import 'package:decisionroll/common/option_view.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/common/textfield_widget.dart';
 import 'package:decisionroll/providers/authentication/authentication_provider.dart';
@@ -7,7 +9,6 @@ import 'package:decisionroll/utilities/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({super.key});
@@ -137,7 +138,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 ),
                 InkWell(
                   onTap: () {
-                    GoRouter.of(c).go('/signin');
+                    goRouter.goNamed('signin');
                   },
                   child: RichText(
                     text: const TextSpan(
@@ -167,7 +168,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         .signInWithGoogle(c)
                         .then((value) {
                       debugPrint("email sign up complete. Return: $value");
-                      GoRouter.of(c).go('/authwrapper');
+                      goRouter.goNamed('authWrapper');
                     });
                   },
                   child: Container(
@@ -206,50 +207,25 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   _signUpOnSubmit(BuildContext c) {
     if (emailController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Email is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Email is required');
     } else if (passwordController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Password is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Password is required');
     } else if (fullNameController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Full Name is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Full name is required ');
     } else if (comfirmPasswordController.text == '') {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Comfirm Password is required'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Comfirm password is required');
     } else if (passwordController.text != comfirmPasswordController.text) {
-      ScaffoldMessenger.of(c).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(right: 10, left: 10, bottom: 10),
-          backgroundColor: blueColor,
-          content: Text('Password do not match'),
-        ),
-      );
+      ref
+          .read(commonMethodsProvider)
+          .showSnackBarMessage(c, 'Password not match');
     } else {
       setState(() {
         isLoading = true;
@@ -260,7 +236,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               emailController.text, passwordController.text, c)
           .then((value) {
         debugPrint("email sign up complete. Return: $value");
-        // GoRouter.of(c).go('/authwrapper');
       });
       if (mounted) {
         setState(() {

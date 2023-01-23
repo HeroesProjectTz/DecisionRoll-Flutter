@@ -5,6 +5,19 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
+pushToDecisionOrUserDecision(String userId) {
+  if (goRouter.location.startsWith('/decision')) {
+    debugPrint(goRouter.location);
+    goRouter.pop();
+
+    // if (kIsWeb) {
+    //   html.window.location.reload();
+    // }
+  } else {
+    goRouter.goNamed('userDecisions', params: {'uid': userId});
+  }
+}
+
 class Authentication {
   // For Authentication related functions you need an instance of FirebaseAuth
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,8 +36,11 @@ class Authentication {
   Future signInWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      goRouter.go('/user/${_auth.currentUser?.uid}/decisions');
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        pushToDecisionOrUserDecision(value.user?.uid.toString() ?? '');
+      });
     } on FirebaseAuthException catch (e) {
       await showDialog(
         context: context,
@@ -53,7 +69,7 @@ class Authentication {
         password: password,
       )
           .then((value) {
-        goRouter.go('/user/${value.user?.uid}/decisions');
+        pushToDecisionOrUserDecision(value.user?.uid.toString() ?? '');
         value.user!.updateDisplayName(fullName);
       });
     } on FirebaseAuthException catch (e) {
@@ -92,6 +108,7 @@ class Authentication {
 
       // Once signed in, return the UserCredential
       await _auth.signInWithPopup(googleProvider);
+      pushToDecisionOrUserDecision(_auth.currentUser?.uid ?? '');
 
       // Or use signInWithRedirect
       // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
@@ -112,6 +129,8 @@ class Authentication {
 
       try {
         await _auth.signInWithCredential(credential);
+
+        pushToDecisionOrUserDecision(_auth.currentUser?.uid ?? '');
       } on FirebaseAuthException catch (e) {
         await showDialog(
           context: context,
@@ -170,7 +189,7 @@ class Authentication {
 
   // Current userName
   String getCurrentUserUID() {
-    String uid = _auth.currentUser!.uid.toString();
+    String uid = _auth.currentUser?.uid.toString() ?? 'null';
     return uid;
   }
 

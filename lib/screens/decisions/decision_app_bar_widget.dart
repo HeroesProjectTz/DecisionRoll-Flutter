@@ -1,4 +1,3 @@
-import 'package:decisionroll/common/candidate_colors.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +5,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../common/my_appbar.dart';
 import '../../common/routes.dart';
-import '../../models/database/decision_model.dart';
-import '../../providers/database/database_provider.dart';
 import '../../providers/database/decision_provider.dart';
 
 class DecisionAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -32,7 +29,8 @@ class DecisionAppBar extends ConsumerWidget implements PreferredSizeWidget {
       color: blueColor05,
       action: [
         InkWell(
-          onTap: () => goRouter.go('/decision/$decisionId/qr'),
+          onTap: () => goRouter
+              .goNamed('decisionQR', params: {'decisionid': decisionId}),
           child: QrImage(
             data: "${Uri.base.origin}/#/decision/$decisionId",
             version: QrVersions.auto,

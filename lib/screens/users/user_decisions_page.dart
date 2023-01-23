@@ -1,13 +1,13 @@
 import 'package:decisionroll/common/bubble_loading_widget.dart';
 import 'package:decisionroll/common/my_appbar.dart';
 import 'package:decisionroll/common/my_drawer.dart';
+import 'package:decisionroll/common/routes.dart';
 import 'package:decisionroll/common/sizeConfig.dart';
 import 'package:decisionroll/providers/database/user_decisions_provider.dart';
 import 'package:decisionroll/screens/users/add_new_decision.dart';
 import 'package:decisionroll/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class UserDecisionsPage extends ConsumerWidget {
   final String userId;
@@ -77,7 +77,8 @@ class UserDecisionsPage extends ConsumerWidget {
                       final decision = decisions[index];
                       return InkWell(
                           onTap: () {
-                            GoRouter.of(context).go('/decision/${decision.id}');
+                            goRouter.goNamed('decisionDetails',
+                                params: {'decisionid': decision.id});
                           },
                           child: Container(
                               margin: const EdgeInsets.only(top: 12),
